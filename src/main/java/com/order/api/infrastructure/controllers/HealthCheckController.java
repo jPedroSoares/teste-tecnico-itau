@@ -1,4 +1,4 @@
-package com.order.api.presentation.controller;
+package com.order.api.infrastructure.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
