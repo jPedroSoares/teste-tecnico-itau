@@ -18,8 +18,6 @@ public record InsurancePolicy(
         Double totalMonthlyPremiumAmount,
         Double insuredAmount,
         PaymentMethod paymentMethod,
-        LocalDateTime createdAt,
-        LocalDateTime finishedAt,
         SalesChannel salesChannel
 ) {
 }

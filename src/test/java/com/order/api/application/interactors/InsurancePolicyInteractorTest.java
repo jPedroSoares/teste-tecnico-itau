@@ -46,8 +46,6 @@ class InsurancePolicyInteractorTest {
                 50.0,
                 50000.0,
                 PaymentMethod.PIX,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
                 SalesChannel.MOBILE
         );
     }
