@@ -1,0 +1,27 @@
+package com.order.api.infrastructure.web.dto;
+
+import com.order.api.domain.enums.PaymentMethod;
+import com.order.api.domain.enums.PolicyCategory;
+import com.order.api.domain.enums.SalesChannel;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+public record CreateInsurancePolicyResponse(
+        UUID id,
+        UUID customerId,
+        UUID productId,
+        PolicyCategory category,
+        SalesChannel salesChannel,
+        PaymentMethod paymentMethod,
+        String status,
+        LocalDateTime createdAt,
+        LocalDateTime finishedAt,
+        Double totalMonthlyPremiumAmount,
+        Double insuredAmount,
+        Map<String, Double> coverages,
+        List<String> assistances
+) { }
