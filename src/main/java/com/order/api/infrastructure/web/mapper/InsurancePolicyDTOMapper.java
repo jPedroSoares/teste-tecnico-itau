@@ -4,8 +4,6 @@ import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyRequest;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyResponse;
 
-import java.util.Optional;
-
 public class InsurancePolicyDTOMapper {
     public CreateInsurancePolicyResponse toResponse (InsurancePolicy insurancePolicy) {
         return new CreateInsurancePolicyResponse(

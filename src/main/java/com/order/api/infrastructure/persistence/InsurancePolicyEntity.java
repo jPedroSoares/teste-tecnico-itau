@@ -5,13 +5,13 @@ import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -38,15 +38,15 @@ public class InsurancePolicyEntity {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private Map<String, Double> coverages;
+    private Map<String, BigDecimal> coverages;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private List<String> assistances;
 
-    private Double totalMonthlyPremiumAmount;
+    private BigDecimal totalMonthlyPremiumAmount;
 
-    private Double insuredAmount;
+    private BigDecimal insuredAmount;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -68,9 +68,9 @@ public class InsurancePolicyEntity {
             PolicyCategory category,
             SalesChannel salesChannel,
             PaymentMethod paymentMethod,
-            Double totalMonthlyPremiumAmount,
-            Double insuredAmount,
-            Map<String, Double> coverages,
+            BigDecimal totalMonthlyPremiumAmount,
+            BigDecimal insuredAmount,
+            Map<String, BigDecimal> coverages,
             List<String> assistances
     ) {
         this.customerId = customerId;

@@ -15,9 +15,9 @@ public record CreateInsurancePolicyRequest(
         PolicyCategory category,
         SalesChannel salesChannel,
         PaymentMethod paymentMethod,
-        Double totalMonthlyPremiumAmount,
-        Double insuredAmount,
-        Map<String, Double> coverages,
+        BigDecimal totalMonthlyPremiumAmount,
+        BigDecimal insuredAmount,
+        Map<String, BigDecimal> coverages,
         List<String> assistances
 ) {
 }

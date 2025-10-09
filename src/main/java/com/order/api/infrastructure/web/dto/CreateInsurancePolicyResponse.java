@@ -20,8 +20,8 @@ public record CreateInsurancePolicyResponse(
         String status,
         LocalDateTime createdAt,
         LocalDateTime finishedAt,
-        Double totalMonthlyPremiumAmount,
-        Double insuredAmount,
-        Map<String, Double> coverages,
+        BigDecimal totalMonthlyPremiumAmount,
+        BigDecimal insuredAmount,
+        Map<String, BigDecimal> coverages,
         List<String> assistances
 ) { }

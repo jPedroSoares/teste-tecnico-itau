@@ -6,6 +6,7 @@ import com.order.api.domain.enums.SalesChannel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +20,13 @@ public class InsurancePolicy
         private UUID customerId;
         private UUID productId;
         private PolicyCategory category;
-        private Map<String, Double> coverages;
+        private Map<String, BigDecimal> coverages;
         private String status;
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
         private List<String> assistances;
-        private Double totalMonthlyPremiumAmount;
-        private Double insuredAmount;
+        private BigDecimal totalMonthlyPremiumAmount;
+        private BigDecimal insuredAmount;
         private PaymentMethod paymentMethod;
         private SalesChannel salesChannel;
         private List<HistoryEntry> history;
@@ -34,10 +35,10 @@ public class InsurancePolicy
             UUID customerId,
             UUID productId,
             PolicyCategory category,
-            Map<String, Double> coverages,
+            Map<String, BigDecimal> coverages,
             List<String> assistances,
-            Double totalMonthlyPremiumAmount,
-            Double insuredAmount,
+            BigDecimal totalMonthlyPremiumAmount,
+            BigDecimal insuredAmount,
             PaymentMethod paymentMethod,
             SalesChannel salesChannel
     ) {

@@ -1,6 +1,5 @@
 package com.order.api.infrastructure.web.controllers;
 
-import com.order.api.application.interactors.InsurancePolicyInteractor;
 import com.order.api.domain.usecases.CreateInsurancePolicy;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyRequest;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyResponse;

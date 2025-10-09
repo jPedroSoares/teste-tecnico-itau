@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -38,10 +39,10 @@ class InsurancePolicyRepositoryGatewayTest {
                 UUID.randomUUID(),
                 UUID.randomUUID(),
                 PolicyCategory.PROPERTY,
-                Map.of("any_coverage", 5000.0),
+                Map.of("any_coverage", BigDecimal.valueOf(5000)),
                 List.of("any_assistance"),
-                50.0,
-                50000.0,
+                BigDecimal.valueOf(50),
+                BigDecimal.valueOf(50000),
                 PaymentMethod.PIX,
                 SalesChannel.MOBILE
         );
@@ -54,9 +55,9 @@ class InsurancePolicyRepositoryGatewayTest {
                 PolicyCategory.PROPERTY,
                 SalesChannel.MOBILE,
                 PaymentMethod.PIX,
-                50.0,
-                50000.0,
-                Map.of("any_coverage", 5000.0),
+                BigDecimal.valueOf(50.0),
+                BigDecimal.valueOf(50000.0),
+                Map.of("any_coverage", BigDecimal.valueOf(5000.0)),
                 List.of("any_assistance")
         );
     }
