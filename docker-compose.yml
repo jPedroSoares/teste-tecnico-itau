@@ -14,7 +14,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - spring-network
-
+  mockserver-fraud-api:
+    image: mockserver/mockserver:latest
+    ports:
+      - "1080:1080"
+    environment:
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/mockserver.json
+    volumes:
+      - ./mock-fraud-api/config:/config
 networks:
   spring-network:
     driver: bridge
