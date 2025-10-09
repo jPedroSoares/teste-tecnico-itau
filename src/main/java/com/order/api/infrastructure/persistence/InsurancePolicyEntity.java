@@ -1,5 +1,6 @@
 package com.order.api.infrastructure.persistence;
 
+import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "insurance_policy")
+@NoArgsConstructor
 public class InsurancePolicyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -55,6 +57,10 @@ public class InsurancePolicyEntity {
 
     @Enumerated(EnumType.STRING)
     private SalesChannel salesChannel;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private List<HistoryEntry> history;
 
     public InsurancePolicyEntity(
             UUID customerId,

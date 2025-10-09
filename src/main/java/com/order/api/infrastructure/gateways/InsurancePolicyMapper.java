@@ -6,15 +6,15 @@ import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 public class InsurancePolicyMapper {
     InsurancePolicyEntity toEntity(InsurancePolicy insurancePolicyDomainObj) {
         return new InsurancePolicyEntity(
-                insurancePolicyDomainObj.productId(),
-                insurancePolicyDomainObj.productId(),
-                insurancePolicyDomainObj.category(),
-                insurancePolicyDomainObj.salesChannel(),
-                insurancePolicyDomainObj.paymentMethod(),
-                insurancePolicyDomainObj.totalMonthlyPremiumAmount(),
-                insurancePolicyDomainObj.insuredAmount(),
-                insurancePolicyDomainObj.coverages(),
-                insurancePolicyDomainObj.assistances()
+                insurancePolicyDomainObj.getCustomerId(),
+                insurancePolicyDomainObj.getProductId(),
+                insurancePolicyDomainObj.getCategory(),
+                insurancePolicyDomainObj.getSalesChannel(),
+                insurancePolicyDomainObj.getPaymentMethod(),
+                insurancePolicyDomainObj.getTotalMonthlyPremiumAmount(),
+                insurancePolicyDomainObj.getInsuredAmount(),
+                insurancePolicyDomainObj.getCoverages(),
+                insurancePolicyDomainObj.getAssistances()
         );
     }
 
