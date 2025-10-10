@@ -1,4 +1,4 @@
-package com.order.api.application.interactors;
+package com.order.api.application.interactors.strategies;
 
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.usecases.PolicyValidationStrategy;

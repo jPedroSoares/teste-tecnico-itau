@@ -1,14 +1,14 @@
-package com.order.api.application.interactors;
+package com.order.api.application.interactors.strategies;
 
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.usecases.PolicyValidationStrategy;
 
 import java.math.BigDecimal;
 
-public class NoInformationCustomerValidationStrategy implements PolicyValidationStrategy {
-    private static final BigDecimal LIFE_PROPERTY_LIMIT = BigDecimal.valueOf(200000);
-    private static final BigDecimal AUTO_LIMIT = BigDecimal.valueOf(75000);
-    private static final BigDecimal OTHER_LIMIT = BigDecimal.valueOf(55000);
+public class RegularCustomerValidationStrategy implements PolicyValidationStrategy {
+    private final BigDecimal LIFE_PROPERTY_LIMIT = BigDecimal.valueOf(500000);
+    private static final BigDecimal AUTO_LIMIT = BigDecimal.valueOf(350000);
+    private static final BigDecimal OTHER_LIMIT = BigDecimal.valueOf(255000);
 
     public boolean isValid(BigDecimal insuredAmount, PolicyCategory category) {
         return switch (category) {
