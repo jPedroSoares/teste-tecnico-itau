@@ -2,6 +2,7 @@ package com.order.api.main;
 
 import com.order.api.application.gateways.PolicyValidationGateway;
 import com.order.api.infrastructure.gateways.PolicyValidationGatewayImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
