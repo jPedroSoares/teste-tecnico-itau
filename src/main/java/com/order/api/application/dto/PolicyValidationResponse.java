@@ -1,6 +1,6 @@
 package com.order.api.application.dto;
 
-import com.order.api.application.enums.ClassificationType;
+import com.order.api.domain.enums.CustomerType;
 
 import java.util.List;
 import java.util.UUID;
@@ -9,7 +9,7 @@ public record PolicyValidationResponse(
         UUID orderId,
         UUID customerId,
         String analyzedAt,
-        ClassificationType classification,
+        CustomerType classification,
         List<Occurrence> occurrences
 ) {
 }
