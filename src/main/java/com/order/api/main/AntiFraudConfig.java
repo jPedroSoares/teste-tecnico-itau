@@ -9,8 +9,8 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class AntiFraudConfig {
     @Bean
-    RestClient antiFraudClient() {
-        return RestClient.create("http://localhost:1080/fraud");
+    RestClient antiFraudClient(@Value("${antifraud.api.url}") String antiFraudUrl) {
+        return RestClient.create(antiFraudUrl);
     }
 
     @Bean
