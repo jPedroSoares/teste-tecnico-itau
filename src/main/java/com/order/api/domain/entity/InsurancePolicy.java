@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class InsurancePolicy
 
     public void addHistoryEntry(InsurancePolicyState state) {
         InsurancePolicyStatus status = state.getStatusName();
-        HistoryEntry historyEntry = new HistoryEntry(LocalTime.now(), status);
+        HistoryEntry historyEntry = new HistoryEntry(LocalDateTime.now(), status);
             this.history.add(historyEntry);
     }
 

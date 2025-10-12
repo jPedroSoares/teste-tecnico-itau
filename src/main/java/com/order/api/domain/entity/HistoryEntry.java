@@ -2,10 +2,10 @@ package com.order.api.domain.entity;
 
 import com.order.api.domain.enums.InsurancePolicyStatus;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public record HistoryEntry(
-    LocalTime timestamp,
+    LocalDateTime timestamp,
     InsurancePolicyStatus status
 ) {
 }

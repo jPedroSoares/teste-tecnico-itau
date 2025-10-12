@@ -5,7 +5,7 @@ import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 
 public class InsurancePolicyMapper {
     InsurancePolicyEntity toEntity(InsurancePolicy insurancePolicyDomainObj) {
-        return new InsurancePolicyEntity(
+    return new InsurancePolicyEntity(
                 insurancePolicyDomainObj.getCustomerId(),
                 insurancePolicyDomainObj.getProductId(),
                 insurancePolicyDomainObj.getCategory(),
@@ -15,8 +15,7 @@ public class InsurancePolicyMapper {
                 insurancePolicyDomainObj.getTotalMonthlyPremiumAmount(),
                 insurancePolicyDomainObj.getInsuredAmount(),
                 insurancePolicyDomainObj.getCoverages(),
-                insurancePolicyDomainObj.getAssistances(),
-                insurancePolicyDomainObj.getHistory()
+                insurancePolicyDomainObj.getAssistances()
         );
     }
 

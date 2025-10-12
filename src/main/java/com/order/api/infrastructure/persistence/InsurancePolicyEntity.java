@@ -62,9 +62,8 @@ public class InsurancePolicyEntity {
     @Enumerated(EnumType.STRING)
     private SalesChannel salesChannel;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private List<HistoryEntry> history;
+    @OneToMany(mappedBy = "insurancePolicy", fetch = FetchType.LAZY)
+    private List<PolicyHistoryEntity> history;
 
     public InsurancePolicyEntity(
             UUID customerId,
@@ -76,8 +75,7 @@ public class InsurancePolicyEntity {
             BigDecimal totalMonthlyPremiumAmount,
             BigDecimal insuredAmount,
             Map<String, BigDecimal> coverages,
-            List<String> assistances,
-            List<HistoryEntry> history
+            List<String> assistances
     ) {
         this.customerId = customerId;
         this.productId = productId;
@@ -90,6 +88,5 @@ public class InsurancePolicyEntity {
         this.coverages = coverages;
         this.assistances = assistances;
         this.createdAt = LocalDateTime.now();
-        this.history = history;
     }
 }
