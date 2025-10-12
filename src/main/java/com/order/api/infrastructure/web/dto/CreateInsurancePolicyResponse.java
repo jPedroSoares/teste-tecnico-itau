@@ -1,5 +1,7 @@
 package com.order.api.infrastructure.web.dto;
 
+import com.order.api.domain.entity.HistoryEntry;
+import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
@@ -17,11 +19,12 @@ public record CreateInsurancePolicyResponse(
         PolicyCategory category,
         SalesChannel salesChannel,
         PaymentMethod paymentMethod,
-        String status,
+        InsurancePolicyStatus status,
         LocalDateTime createdAt,
         LocalDateTime finishedAt,
         BigDecimal totalMonthlyPremiumAmount,
         BigDecimal insuredAmount,
         Map<String, BigDecimal> coverages,
-        List<String> assistances
+        List<String> assistances,
+        List<HistoryEntry> history
 ) { }

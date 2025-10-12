@@ -1,6 +1,7 @@
 package com.order.api.infrastructure.persistence;
 
 import com.order.api.domain.entity.HistoryEntry;
+import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
@@ -36,6 +37,9 @@ public class InsurancePolicyEntity {
     @Enumerated(EnumType.STRING)
     private PolicyCategory category;
 
+    @Enumerated(EnumType.STRING)
+    private InsurancePolicyStatus status;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private Map<String, BigDecimal> coverages;
@@ -66,16 +70,19 @@ public class InsurancePolicyEntity {
             UUID customerId,
             UUID productId,
             PolicyCategory category,
+            InsurancePolicyStatus status,
             SalesChannel salesChannel,
             PaymentMethod paymentMethod,
             BigDecimal totalMonthlyPremiumAmount,
             BigDecimal insuredAmount,
             Map<String, BigDecimal> coverages,
-            List<String> assistances
+            List<String> assistances,
+            List<HistoryEntry> history
     ) {
         this.customerId = customerId;
         this.productId = productId;
         this.category = category;
+        this.status = status;
         this.salesChannel = salesChannel;
         this.paymentMethod = paymentMethod;
         this.totalMonthlyPremiumAmount = totalMonthlyPremiumAmount;
@@ -83,5 +90,6 @@ public class InsurancePolicyEntity {
         this.coverages = coverages;
         this.assistances = assistances;
         this.createdAt = LocalDateTime.now();
+        this.history = history;
     }
 }

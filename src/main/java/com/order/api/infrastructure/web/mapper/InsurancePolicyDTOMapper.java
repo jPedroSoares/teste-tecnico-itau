@@ -13,18 +13,20 @@ public class InsurancePolicyDTOMapper {
                 insurancePolicy.getCategory(),
                 insurancePolicy.getSalesChannel(),
                 insurancePolicy.getPaymentMethod(),
-                insurancePolicy.getStatus(),
+                insurancePolicy.getStatus().getStatusName(),
                 insurancePolicy.getCreatedAt(),
                 insurancePolicy.getFinishedAt(),
                 insurancePolicy.getTotalMonthlyPremiumAmount(),
                 insurancePolicy.getInsuredAmount(),
                 insurancePolicy.getCoverages(),
-                insurancePolicy.getAssistances()
+                insurancePolicy.getAssistances(),
+                insurancePolicy.getHistory()
         );
     }
 
      public InsurancePolicy toInsurancePolicy (CreateInsurancePolicyRequest request){
         return new InsurancePolicy(
+                null,
                 request.customerId(),
                 request.productId(),
                 request.category(),

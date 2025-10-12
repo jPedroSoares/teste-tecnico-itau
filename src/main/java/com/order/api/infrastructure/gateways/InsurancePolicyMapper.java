@@ -9,17 +9,20 @@ public class InsurancePolicyMapper {
                 insurancePolicyDomainObj.getCustomerId(),
                 insurancePolicyDomainObj.getProductId(),
                 insurancePolicyDomainObj.getCategory(),
+                insurancePolicyDomainObj.getStatus().getStatusName(),
                 insurancePolicyDomainObj.getSalesChannel(),
                 insurancePolicyDomainObj.getPaymentMethod(),
                 insurancePolicyDomainObj.getTotalMonthlyPremiumAmount(),
                 insurancePolicyDomainObj.getInsuredAmount(),
                 insurancePolicyDomainObj.getCoverages(),
-                insurancePolicyDomainObj.getAssistances()
+                insurancePolicyDomainObj.getAssistances(),
+                insurancePolicyDomainObj.getHistory()
         );
     }
 
     InsurancePolicy toDomain(InsurancePolicyEntity insurancePolicyEntity) {
         return new InsurancePolicy(
+                insurancePolicyEntity.getId(),
                 insurancePolicyEntity.getCustomerId(),
                 insurancePolicyEntity.getProductId(),
                 insurancePolicyEntity.getCategory(),
