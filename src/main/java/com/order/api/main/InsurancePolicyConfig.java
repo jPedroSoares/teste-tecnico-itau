@@ -1,5 +1,6 @@
 package com.order.api.main;
 
+import com.order.api.application.gateways.HistoryEntryGateway;
 import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.application.gateways.PolicyValidationGateway;
 import com.order.api.application.interactors.InsurancePolicyInteractor;
@@ -19,8 +20,9 @@ import org.springframework.context.annotation.Configuration;
 public class InsurancePolicyConfig {
     @Bean
     CreateInsurancePolicy createUsecase(InsurancePolicyGateway insurancePolicyGateway, PolicyValidationGateway
-            policyValidationGateway, ValidateInsurancePolicy validateInsurancePolicy, KafkaProducer kafkaProducer) {
-        return new InsurancePolicyInteractor(insurancePolicyGateway, policyValidationGateway, validateInsurancePolicy, kafkaProducer);
+            policyValidationGateway, ValidateInsurancePolicy validateInsurancePolicy, KafkaProducer kafkaProducer,
+                                        HistoryEntryGateway historyEntryGateway) {
+        return new InsurancePolicyInteractor(insurancePolicyGateway, policyValidationGateway, validateInsurancePolicy, kafkaProducer, historyEntryGateway);
     }
 
     @Bean
