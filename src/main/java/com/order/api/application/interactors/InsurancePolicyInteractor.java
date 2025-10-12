@@ -18,7 +18,12 @@ public record InsurancePolicyInteractor(
         InsurancePolicy createdInsurancePolicy = insurancePolicyGateway.createInsurancePolicy(insurancePolicy);
         PolicyValidationRequest policyValidationRequest = new PolicyValidationRequest(createdInsurancePolicy.getId(), createdInsurancePolicy.getCustomerId());
         PolicyValidationResponse policyValidationResponse = policyValidationGateway.validate(policyValidationRequest);
-        validateInsurancePolicy.validate(insurancePolicy, policyValidationResponse.classification());
+        boolean isValid = validateInsurancePolicy.validate(insurancePolicy, policyValidationResponse.classification());
+        if (isValid) {
+            createdInsurancePolicy.validate();
+        } else {
+            createdInsurancePolicy.reject();
+        }
         return createdInsurancePolicy;
     }
 }
