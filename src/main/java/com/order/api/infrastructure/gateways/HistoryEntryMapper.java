@@ -4,6 +4,8 @@ import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 import com.order.api.infrastructure.persistence.PolicyHistoryEntity;
 
+import java.util.List;
+
 public class HistoryEntryMapper {
     PolicyHistoryEntity toEntity(HistoryEntry historyEntryDomainObj, InsurancePolicyEntity insurancePolicy) {
         return new PolicyHistoryEntity(
@@ -19,5 +21,10 @@ public class HistoryEntryMapper {
                 policyHistoryEntity.getTimestamp(),
                 policyHistoryEntity.getStatus()
         );
+    }
+    List<HistoryEntry> toDomain(List<PolicyHistoryEntity> policyHistoryEntities) {
+        return policyHistoryEntities.stream()
+                .map(this::toDomain)
+                .toList();
     }
 }

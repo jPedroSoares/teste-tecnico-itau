@@ -1,9 +1,19 @@
 package com.order.api.infrastructure.gateways;
 
+import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 
+import java.util.List;
+import java.util.Optional;
+
 public class InsurancePolicyMapper {
+    private final HistoryEntryMapper historyEntryMapper;
+    public InsurancePolicyMapper(
+            HistoryEntryMapper historyEntryMapper
+    ) {
+        this.historyEntryMapper = historyEntryMapper;
+    }
     InsurancePolicyEntity toEntity(InsurancePolicy insurancePolicyDomainObj) {
     return new InsurancePolicyEntity(
                 insurancePolicyDomainObj.getCustomerId(),
@@ -20,7 +30,7 @@ public class InsurancePolicyMapper {
     }
 
     InsurancePolicy toDomain(InsurancePolicyEntity insurancePolicyEntity) {
-        return new InsurancePolicy(
+        InsurancePolicy insurancePolicy = new InsurancePolicy(
                 insurancePolicyEntity.getId(),
                 insurancePolicyEntity.getCustomerId(),
                 insurancePolicyEntity.getProductId(),
@@ -32,6 +42,15 @@ public class InsurancePolicyMapper {
                 insurancePolicyEntity.getPaymentMethod(),
                 insurancePolicyEntity.getSalesChannel()
         );
+        List<HistoryEntry> historyEntryDomain = historyEntryMapper.toDomain(insurancePolicyEntity.getHistory());
+        insurancePolicy.setHistory(historyEntryDomain);
+        return insurancePolicy;
     }
 
+    public InsurancePolicy toDomain(Optional<InsurancePolicyEntity> entity) {
+        if (entity.isEmpty()) {
+            return null;
+        }
+        return toDomain(entity.get());
+    }
 }

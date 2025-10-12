@@ -3,11 +3,14 @@ package com.order.api.main;
 import com.order.api.application.gateways.HistoryEntryGateway;
 import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.application.gateways.PolicyValidationGateway;
+import com.order.api.application.interactors.FindInsurancePolicyInteractor;
 import com.order.api.application.interactors.InsurancePolicyInteractor;
 import com.order.api.application.interactors.ValidateInsurancePolicyImp;
 import com.order.api.application.interactors.strategies.PolicyValidationStrategyFactory;
 import com.order.api.domain.usecases.CreateInsurancePolicy;
+import com.order.api.domain.usecases.FindInsurancePolicy;
 import com.order.api.domain.usecases.ValidateInsurancePolicy;
+import com.order.api.infrastructure.gateways.HistoryEntryMapper;
 import com.order.api.infrastructure.gateways.InsurancePolicyMapper;
 import com.order.api.infrastructure.gateways.InsurancePolicyRepositoryGateway;
 import com.order.api.infrastructure.messaging.KafkaProducer;
@@ -36,12 +39,17 @@ public class InsurancePolicyConfig {
     }
 
     @Bean
-    InsurancePolicyMapper InsurancePolicyMapper() {
-        return new InsurancePolicyMapper();
+    InsurancePolicyMapper InsurancePolicyMapper(HistoryEntryMapper historyEntryMapper) {
+        return new InsurancePolicyMapper(historyEntryMapper);
     }
 
     @Bean
     InsurancePolicyDTOMapper insurancePolicyDTOMapper() {
         return new InsurancePolicyDTOMapper();
+    }
+
+    @Bean
+    FindInsurancePolicy findUsecase(InsurancePolicyGateway insurancePolicyGateway) {
+        return new FindInsurancePolicyInteractor(insurancePolicyGateway);
     }
 }
