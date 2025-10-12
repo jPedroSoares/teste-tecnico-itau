@@ -7,15 +7,9 @@ import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 import java.util.List;
 import java.util.Optional;
 
-public class InsurancePolicyMapper {
-    private final HistoryEntryMapper historyEntryMapper;
-    public InsurancePolicyMapper(
-            HistoryEntryMapper historyEntryMapper
-    ) {
-        this.historyEntryMapper = historyEntryMapper;
-    }
+public record InsurancePolicyMapper(HistoryEntryMapper historyEntryMapper) {
     InsurancePolicyEntity toEntity(InsurancePolicy insurancePolicyDomainObj) {
-    return new InsurancePolicyEntity(
+        return new InsurancePolicyEntity(
                 insurancePolicyDomainObj.getCustomerId(),
                 insurancePolicyDomainObj.getProductId(),
                 insurancePolicyDomainObj.getCategory(),
@@ -48,9 +42,6 @@ public class InsurancePolicyMapper {
     }
 
     public InsurancePolicy toDomain(Optional<InsurancePolicyEntity> entity) {
-        if (entity.isEmpty()) {
-            return null;
-        }
-        return toDomain(entity.get());
+        return entity.map(this::toDomain).orElse(null);
     }
 }
