@@ -9,6 +9,7 @@ import com.order.api.domain.usecases.CreateInsurancePolicy;
 import com.order.api.domain.usecases.ValidateInsurancePolicy;
 import com.order.api.infrastructure.gateways.InsurancePolicyMapper;
 import com.order.api.infrastructure.gateways.InsurancePolicyRepositoryGateway;
+import com.order.api.infrastructure.messaging.KafkaProducer;
 import com.order.api.infrastructure.persistence.InsurancePolicyRepository;
 import com.order.api.infrastructure.web.mapper.InsurancePolicyDTOMapper;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 public class InsurancePolicyConfig {
     @Bean
     CreateInsurancePolicy createUsecase(InsurancePolicyGateway insurancePolicyGateway, PolicyValidationGateway
-            policyValidationGateway, ValidateInsurancePolicy validateInsurancePolicy) {
-        return new InsurancePolicyInteractor(insurancePolicyGateway, policyValidationGateway, validateInsurancePolicy);
+            policyValidationGateway, ValidateInsurancePolicy validateInsurancePolicy, KafkaProducer kafkaProducer) {
+        return new InsurancePolicyInteractor(insurancePolicyGateway, policyValidationGateway, validateInsurancePolicy, kafkaProducer);
     }
 
     @Bean
