@@ -1,18 +1,18 @@
 package com.order.api.main;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.order.api.application.gateways.HistoryEntryGateway;
+import com.order.api.application.interactors.ProcessEventImp;
+import com.order.api.domain.usecases.FindInsurancePolicy;
+import com.order.api.domain.usecases.EventProcessor;
 import com.order.api.infrastructure.messaging.consumers.PaymentKafkaConsumer;
 import com.order.api.infrastructure.messaging.KafkaProducer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
-import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
@@ -44,7 +44,14 @@ public class KafkaConfig {
     }
 
     @Bean
-    public PaymentKafkaConsumer PaymentKafkaConsumer() {
-        return new PaymentKafkaConsumer();
+    public PaymentKafkaConsumer PaymentKafkaConsumer(EventProcessor eventProcessor) {
+        return new PaymentKafkaConsumer(eventProcessor);
+    }
+
+    @Bean
+    public EventProcessor eventProcessor( FindInsurancePolicy findInsurancePolicy,
+                                          HistoryEntryGateway historyEntryGateway) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return new ProcessEventImp(objectMapper, findInsurancePolicy, historyEntryGateway);
     }
 }
