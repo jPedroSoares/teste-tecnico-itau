@@ -36,6 +36,7 @@ class InsurancePolicyInteractorTest {
 
     private InsurancePolicy buildInsurancePolicy() {
         return new InsurancePolicy(
+                null,
                 UUID.randomUUID(),
                 UUID.randomUUID(),
                 PolicyCategory.PROPERTY,

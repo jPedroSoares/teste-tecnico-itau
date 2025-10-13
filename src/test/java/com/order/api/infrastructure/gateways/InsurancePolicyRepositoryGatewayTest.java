@@ -1,6 +1,7 @@
 package com.order.api.infrastructure.gateways;
 
 import com.order.api.domain.entity.InsurancePolicy;
+import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
@@ -36,6 +37,7 @@ class InsurancePolicyRepositoryGatewayTest {
 
     private InsurancePolicy buildInsurancePolicy() {
         return new InsurancePolicy(
+                null,
                 UUID.randomUUID(),
                 UUID.randomUUID(),
                 PolicyCategory.PROPERTY,
@@ -53,6 +55,7 @@ class InsurancePolicyRepositoryGatewayTest {
                 UUID.randomUUID(),
                 UUID.randomUUID(),
                 PolicyCategory.PROPERTY,
+                InsurancePolicyStatus.RECEIVED,
                 SalesChannel.MOBILE,
                 PaymentMethod.PIX,
                 BigDecimal.valueOf(50.0),
