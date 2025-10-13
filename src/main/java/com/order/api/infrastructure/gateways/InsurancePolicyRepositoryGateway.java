@@ -5,6 +5,7 @@ import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 import com.order.api.infrastructure.persistence.InsurancePolicyRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,5 +27,10 @@ public class InsurancePolicyRepositoryGateway implements InsurancePolicyGateway 
     public InsurancePolicy findById(UUID id) {
         Optional<InsurancePolicyEntity> entity = insurancePolicyRepository.findById(id);
         return insurancePolicyMapper.toDomain(entity);
+    }
+
+    public List<InsurancePolicy> findByCustomerId(UUID customerId) {
+        List<InsurancePolicyEntity> entities = insurancePolicyRepository.findByCustomerId(customerId);
+        return insurancePolicyMapper.toDomain(entities);
     }
 }

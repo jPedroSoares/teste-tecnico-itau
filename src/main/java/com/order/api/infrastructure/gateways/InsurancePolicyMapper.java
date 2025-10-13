@@ -44,4 +44,8 @@ public record InsurancePolicyMapper(HistoryEntryMapper historyEntryMapper) {
     public InsurancePolicy toDomain(Optional<InsurancePolicyEntity> entity) {
         return entity.map(this::toDomain).orElse(null);
     }
+
+    public List<InsurancePolicy> toDomain(List<InsurancePolicyEntity> entities) {
+        return entities.stream().map(this::toDomain).toList();
+    }
 }

@@ -4,6 +4,8 @@ import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyRequest;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyResponse;
 
+import java.util.List;
+
 public class InsurancePolicyDTOMapper {
     public CreateInsurancePolicyResponse toResponse (InsurancePolicy insurancePolicy) {
         return new CreateInsurancePolicyResponse(
@@ -38,4 +40,11 @@ public class InsurancePolicyDTOMapper {
                 request.salesChannel()
         );
      }
+
+    public List<CreateInsurancePolicyResponse> toResponse(List<InsurancePolicy> response) {
+        if (response.isEmpty()) {
+            return null;
+        }
+        return response.stream().map(this::toResponse).toList();
+    }
 }

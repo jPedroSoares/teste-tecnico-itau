@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,7 +22,11 @@ public class InsurancePolicyController {
     private final FindInsurancePolicy findInsurancePolicy;
     private final CancelInsurancePolicy cancelInsurancePolicy;
 
-    public InsurancePolicyController(CreateInsurancePolicy createInsurancePolicy, InsurancePolicyDTOMapper insurancePolicyDTOMapper, FindInsurancePolicy findInsurancePolicy, CancelInsurancePolicy cancelInsurancePolicy) {
+    public InsurancePolicyController(
+            CreateInsurancePolicy createInsurancePolicy,
+            InsurancePolicyDTOMapper insurancePolicyDTOMapper,
+            FindInsurancePolicy findInsurancePolicy,
+            CancelInsurancePolicy cancelInsurancePolicy) {
         this.createInsurancePolicy = createInsurancePolicy;
         this.insurancePolicyDTOMapper = insurancePolicyDTOMapper;
         this.findInsurancePolicy = findInsurancePolicy;
@@ -35,7 +40,7 @@ public class InsurancePolicyController {
         return insurancePolicyDTOMapper.toResponse(createdInsurancePolicy);
     }
 
-    @GetMapping("/{policyId}")
+    @GetMapping("/policy/{policyId}")
     CreateInsurancePolicyResponse getByPolicyId(
             @PathVariable UUID policyId) {
         InsurancePolicy response = findInsurancePolicy.find(policyId);
@@ -43,6 +48,19 @@ public class InsurancePolicyController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Policy not found with id: " + policyId
+            );
+        }
+        return insurancePolicyDTOMapper.toResponse(response);
+    }
+
+    @GetMapping("/customer/{customerId}")
+    List<CreateInsurancePolicyResponse> getByCustomerId(
+            @PathVariable UUID customerId) {
+        List<InsurancePolicy> response = findInsurancePolicy.findByCustomerId(customerId);
+        if (response.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Policies not found for CustomerId: " + customerId
             );
         }
         return insurancePolicyDTOMapper.toResponse(response);
