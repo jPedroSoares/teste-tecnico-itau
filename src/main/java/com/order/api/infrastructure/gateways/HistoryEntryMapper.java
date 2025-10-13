@@ -4,7 +4,10 @@ import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 import com.order.api.infrastructure.persistence.PolicyHistoryEntity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HistoryEntryMapper {
     PolicyHistoryEntity toEntity(HistoryEntry historyEntryDomainObj, InsurancePolicyEntity insurancePolicy) {
@@ -23,8 +26,11 @@ public class HistoryEntryMapper {
         );
     }
     List<HistoryEntry> toDomain(List<PolicyHistoryEntity> policyHistoryEntities) {
+        if (policyHistoryEntities == null) {
+            return new ArrayList<>();
+        }
         return policyHistoryEntities.stream()
                 .map(this::toDomain)
-                .toList();
+                .collect(Collectors.toList());
     }
 }

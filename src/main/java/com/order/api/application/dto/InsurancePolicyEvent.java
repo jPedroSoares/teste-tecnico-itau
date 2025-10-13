@@ -12,6 +12,6 @@ public record InsurancePolicyEvent (
         UUID policyId,
         UUID customerId,
         InsurancePolicyStatus status,
-        LocalDateTime timestamp
+        String timestamp
         ) {
 }

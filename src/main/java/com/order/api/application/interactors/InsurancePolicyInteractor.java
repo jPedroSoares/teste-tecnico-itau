@@ -26,6 +26,7 @@ public record InsurancePolicyInteractor(
 
     public InsurancePolicy create(InsurancePolicy insurancePolicy) {
         InsurancePolicy createdInsurancePolicy = insurancePolicyGateway.createInsurancePolicy(insurancePolicy);
+        createdInsurancePolicy.setHistory(insurancePolicy.getHistory());
         publishEvent(createdInsurancePolicy, EventType.ORDER_CREATED);
         PolicyValidationRequest policyValidationRequest = new PolicyValidationRequest(createdInsurancePolicy.getId(), createdInsurancePolicy.getCustomerId());
         PolicyValidationResponse policyValidationResponse = policyValidationGateway.validate(policyValidationRequest);
@@ -46,7 +47,7 @@ public record InsurancePolicyInteractor(
                 insurancePolicy.getId(),
                 insurancePolicy.getCustomerId(),
                 insurancePolicy.getStatus().getStatusName(),
-                LocalDateTime.now()
+                LocalDateTime.now().toString()
         );
         eventPublisher.publish(event);
         HistoryEntry historyEntry = new HistoryEntry(LocalDateTime.now(), insurancePolicy.getStatus().getStatusName());
