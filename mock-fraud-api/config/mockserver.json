@@ -1,38 +1,85 @@
-{
-  "httpRequest": {
-    "method": "POST",
-    "path": "/fraud/check"
-  },
-  "httpResponse": {
-    "statusCode": 200,
-    "headers": {
-      "Content-Type": [
-        "application/json"
-      ]
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/fraud/check"
     },
-    "body": {
-      "orderId": "e053467f-bd48-4fd2-9481-75bd4e88ee40",
-      "customerId": "7c2a27ba-71ef-4dd8-a3cf-5e094316ffd8",
-      "analyzedAt": "2024-05-10'T'12:00:00Z",
-      "classification": "HIGH_RISK",
-      "occurrences": [
-        {
-          "id": "e053467f-bd48-4fd2-9481-75bd4e88ee40",
-          "productId": 78900069,
-          "type": "FRAUD",
-          "description": "Attempted Fraudulent transaction",
-          "createdAt": "2024-05-10'T'12:00:00Z",
-          "updatedAt": "2024-05-10'T'12:00:00Z"
-        },
-        {
-          "id": "f053467f-bd48-4fd2-9481-75bd4e88ee41",
-          "productId": 104445569,
-          "type": "SUSPICION",
-          "description": "Unusual activity flagged for review",
-          "createdAt": "2024-04-09'T'14:35:30Z",
-          "updatedAt": "2024-04-09'T'14:35:30Z"
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "orderId": "e053467f-bd48-4fd2-9481-75bd4e88ee40",
+        "customerId": "7c2a27ba-71ef-4dd8-a3cf-5e094316ffd8",
+        "analyzedAt": "2024-05-10T12:00:00Z",
+        "classification": "HIGH_RISK",
+        "occurrences": [
+          {
+            "id": "e053467f-bd48-4fd2-9481-75bd4e88ee40",
+            "productId": 78900069,
+            "type": "FRAUD",
+            "description": "Attempted Fraudulent transaction",
+            "createdAt": "2024-05-10T12:00:00Z",
+            "updatedAt": "2024-05-10T12:00:00Z"
+          },
+          {
+            "id": "f053467f-bd48-4fd2-9481-75bd4e88ee41",
+            "productId": 104445569,
+            "type": "SUSPICION",
+            "description": "Unusual activity flagged for review",
+            "createdAt": "2024-04-09T14:35:30Z",
+            "updatedAt": "2024-04-09T14:35:30Z"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/fraud/health"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "status": "UP",
+        "timestamp": "2024-10-13T15:30:00Z",
+        "service": "Anti-Fraud API",
+        "version": "1.0.0",
+        "uptime": "72h 15m 30s",
+        "checks": {
+          "database": "UP",
+          "cache": "UP",
+          "externalServices": "UP"
         }
-      ]
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/fraud/health"
+    },
+    "httpResponse": {
+      "statusCode": 503,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "status": "DOWN",
+        "timestamp": "2024-10-13T15:30:00Z",
+        "service": "Anti-Fraud API",
+        "version": "1.0.0",
+        "error": "Database connection timeout"
+      }
+    },
+    "times": {
+      "remainingTimes": 1,
+      "unlimited": false
     }
   }
-}
+]
