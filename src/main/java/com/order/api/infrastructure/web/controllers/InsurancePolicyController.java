@@ -5,9 +5,10 @@ import com.order.api.domain.usecases.CancelInsurancePolicy;
 import com.order.api.domain.usecases.CreateInsurancePolicy;
 import com.order.api.domain.usecases.FindInsurancePolicy;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyRequest;
-import com.order.api.infrastructure.web.dto.CreateInsurancePolicyResponse;
+import com.order.api.infrastructure.web.dto.InsurancePolicyResponse;
 import com.order.api.infrastructure.web.mapper.InsurancePolicyDTOMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,14 +35,14 @@ public class InsurancePolicyController {
     }
 
     @PostMapping
-    CreateInsurancePolicyResponse create(@RequestBody CreateInsurancePolicyRequest request){
+    InsurancePolicyResponse create(@RequestBody CreateInsurancePolicyRequest request){
         var insurancePolicy = insurancePolicyDTOMapper.toInsurancePolicy(request);
         var createdInsurancePolicy = createInsurancePolicy.create(insurancePolicy);
         return insurancePolicyDTOMapper.toResponse(createdInsurancePolicy);
     }
 
     @GetMapping("/policy/{policyId}")
-    CreateInsurancePolicyResponse getByPolicyId(
+    InsurancePolicyResponse getByPolicyId(
             @PathVariable UUID policyId) {
         InsurancePolicy response = findInsurancePolicy.find(policyId);
         if (response == null) {
@@ -54,7 +55,7 @@ public class InsurancePolicyController {
     }
 
     @GetMapping("/customer/{customerId}")
-    List<CreateInsurancePolicyResponse> getByCustomerId(
+    List<InsurancePolicyResponse> getByCustomerId(
             @PathVariable UUID customerId) {
         List<InsurancePolicy> response = findInsurancePolicy.findByCustomerId(customerId);
         if (response.isEmpty()) {
@@ -67,7 +68,8 @@ public class InsurancePolicyController {
     }
 
     @PatchMapping("/{policyId}/cancel")
-    void cancel(@PathVariable UUID policyId) {
-        cancelInsurancePolicy.cancelPolicy(policyId);
+    ResponseEntity<InsurancePolicyResponse> cancel(@PathVariable UUID policyId) {
+        InsurancePolicy canceledPolicy = cancelInsurancePolicy.cancelPolicy(policyId);
+        return ResponseEntity.ok(insurancePolicyDTOMapper.toReadResponse(canceledPolicy));
     }
 }

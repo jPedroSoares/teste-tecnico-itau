@@ -14,10 +14,11 @@ import java.util.UUID;
 
 public record CancelInsurancePolicyInteractor (InsurancePolicyGateway insurancePolicyGateway, EventPublisher eventPublisher,
                                               HistoryEntryGateway historyEntryGateway) implements CancelInsurancePolicy {
-    public void cancelPolicy(UUID policyId) {
+    public InsurancePolicy cancelPolicy(UUID policyId) {
         InsurancePolicy insurancePolicy = insurancePolicyGateway.findById(policyId);
         insurancePolicy.cancel();
         publishEvent(insurancePolicy);
+        return insurancePolicy;
     }
 
     private void publishEvent(InsurancePolicy insurancePolicy) {

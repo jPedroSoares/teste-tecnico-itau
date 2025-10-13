@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public record CreateInsurancePolicyResponse(
+public record InsurancePolicyResponse(
         UUID id,
         UUID customerId,
         UUID productId,
