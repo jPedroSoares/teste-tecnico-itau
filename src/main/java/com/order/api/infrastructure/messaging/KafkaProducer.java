@@ -1,6 +1,7 @@
 package com.order.api.infrastructure.messaging;
 
 import com.order.api.application.dto.InsurancePolicyEvent;
+import com.order.api.domain.ports.EventPublisher;
 import org.springframework.kafka.core.KafkaTemplate;
 
 

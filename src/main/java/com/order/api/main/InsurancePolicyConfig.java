@@ -15,7 +15,7 @@ import com.order.api.domain.usecases.ValidateInsurancePolicy;
 import com.order.api.infrastructure.gateways.HistoryEntryMapper;
 import com.order.api.infrastructure.gateways.InsurancePolicyMapper;
 import com.order.api.infrastructure.gateways.InsurancePolicyRepositoryGateway;
-import com.order.api.infrastructure.messaging.EventPublisher;
+import com.order.api.domain.ports.EventPublisher;
 import com.order.api.infrastructure.messaging.KafkaProducer;
 import com.order.api.infrastructure.persistence.InsurancePolicyRepository;
 import com.order.api.infrastructure.web.mapper.InsurancePolicyDTOMapper;

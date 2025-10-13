@@ -1,13 +1,13 @@
 package com.order.api.application.interactors;
 
 import com.order.api.application.dto.InsurancePolicyEvent;
-import com.order.api.application.enums.EventType;
+import com.order.api.domain.enums.EventType;
 import com.order.api.application.gateways.HistoryEntryGateway;
 import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.domain.usecases.CancelInsurancePolicy;
-import com.order.api.infrastructure.messaging.EventPublisher;
+import com.order.api.domain.ports.EventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

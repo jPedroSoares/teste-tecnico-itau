@@ -1,4 +1,4 @@
-package com.order.api.application.enums;
+package com.order.api.domain.enums;
 
 public enum EventType {
     ORDER_CREATED,
