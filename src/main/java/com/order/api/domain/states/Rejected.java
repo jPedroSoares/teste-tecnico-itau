@@ -11,7 +11,7 @@ public class Rejected implements InsurancePolicyState {
 
     @Override
     public void process(InsurancePolicy policy) {
-        InsurancePolicyState newStatus = new Canceled();
+        InsurancePolicyState newStatus = new Pending();
         policy.setStatus(newStatus);
         policy.addHistoryEntry(newStatus);
     }
