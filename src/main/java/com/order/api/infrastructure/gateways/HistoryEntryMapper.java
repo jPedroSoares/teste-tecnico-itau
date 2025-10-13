@@ -5,7 +5,6 @@ import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 import com.order.api.infrastructure.persistence.PolicyHistoryEntity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

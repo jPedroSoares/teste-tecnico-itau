@@ -1,6 +1,5 @@
 package com.order.api.infrastructure.persistence;
 
-import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
