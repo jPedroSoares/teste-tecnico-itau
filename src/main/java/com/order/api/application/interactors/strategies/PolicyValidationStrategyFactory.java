@@ -23,10 +23,10 @@ public class PolicyValidationStrategyFactory {
     }
 
     public PolicyValidationStrategy getStrategy(CustomerType customerType) {
-        PolicyValidationStrategy strategy = strategies.get(customerType);
-        if (strategy == null) {
-            throw new IllegalArgumentException("No validation strategy found for customer type: " + customerType);
+        if (customerType == null) {
+            throw new IllegalArgumentException("Customer type cannot be null");
         }
+        PolicyValidationStrategy strategy = strategies.get(customerType);
         return strategy;
     }
 }
