@@ -1,13 +1,13 @@
 package com.order.api.infrastructure.web.controllers;
 
 import com.order.api.domain.entity.InsurancePolicy;
+import com.order.api.domain.usecases.CancelInsurancePolicy;
 import com.order.api.domain.usecases.CreateInsurancePolicy;
 import com.order.api.domain.usecases.FindInsurancePolicy;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyRequest;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyResponse;
 import com.order.api.infrastructure.web.mapper.InsurancePolicyDTOMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,11 +19,13 @@ public class InsurancePolicyController {
     private final CreateInsurancePolicy createInsurancePolicy;
     private final InsurancePolicyDTOMapper insurancePolicyDTOMapper;
     private final FindInsurancePolicy findInsurancePolicy;
+    private final CancelInsurancePolicy cancelInsurancePolicy;
 
-    public InsurancePolicyController(CreateInsurancePolicy createInsurancePolicy, InsurancePolicyDTOMapper insurancePolicyDTOMapper, FindInsurancePolicy findInsurancePolicy) {
+    public InsurancePolicyController(CreateInsurancePolicy createInsurancePolicy, InsurancePolicyDTOMapper insurancePolicyDTOMapper, FindInsurancePolicy findInsurancePolicy, CancelInsurancePolicy cancelInsurancePolicy) {
         this.createInsurancePolicy = createInsurancePolicy;
         this.insurancePolicyDTOMapper = insurancePolicyDTOMapper;
         this.findInsurancePolicy = findInsurancePolicy;
+        this.cancelInsurancePolicy = cancelInsurancePolicy;
     }
 
     @PostMapping
@@ -34,7 +36,7 @@ public class InsurancePolicyController {
     }
 
     @GetMapping("/{policyId}")
-    public CreateInsurancePolicyResponse getByPolicyId(
+    CreateInsurancePolicyResponse getByPolicyId(
             @PathVariable UUID policyId) {
         InsurancePolicy response = findInsurancePolicy.find(policyId);
         if (response == null) {
@@ -44,5 +46,10 @@ public class InsurancePolicyController {
             );
         }
         return insurancePolicyDTOMapper.toResponse(response);
+    }
+
+    @PatchMapping("/{policyId}/cancel")
+    void cancel(@PathVariable UUID policyId) {
+        cancelInsurancePolicy.cancelPolicy(policyId);
     }
 }
