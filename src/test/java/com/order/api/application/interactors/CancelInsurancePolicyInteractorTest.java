@@ -114,18 +114,14 @@ class CancelInsurancePolicyInteractorTest {
     }
 
     @Test
-    @DisplayName("Should throw exception when policy not found")
+    @DisplayName("Should return null when policy not found")
     void shouldThrowExceptionWhenPolicyNotFound() {
         UUID notFoundPolicyId = UUID.randomUUID();
         when(insurancePolicyGateway.findById(notFoundPolicyId)).thenReturn(null);
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> interactor.cancelPolicy(notFoundPolicyId)
-        );
+        InsurancePolicy response = interactor.cancelPolicy(notFoundPolicyId);
 
-        assertEquals("Insurance policy not found", exception.getMessage());
-
+        assertNull(response);
         verify(insurancePolicyGateway).findById(notFoundPolicyId);
         verifyNoInteractions(eventPublisher);
         verifyNoInteractions(historyEntryGateway);
