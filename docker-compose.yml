@@ -11,10 +11,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/orderdb
       SPRING_DATASOURCE_USERNAME: test_user
       SPRING_DATASOURCE_PASSWORD: test_pass
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:29092
+      ANTIFRAUD_API_URL: http://mockserver-fraud-api:1080/fraud
     depends_on:
-      - db
-      - kafka
-      - mockserver-fraud-api
+      kafka:
+        condition: service_healthy
+      db:
+        condition: service_started
+      mockserver-fraud-api:
+        condition: service_started
     networks:
       - spring-network
   db:
