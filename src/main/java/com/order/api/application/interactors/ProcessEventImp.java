@@ -10,26 +10,17 @@ import com.order.api.domain.usecases.EventProcessor;
 
 import java.time.LocalDateTime;
 
-public class ProcessEventImp implements EventProcessor {
-    private final ObjectMapper objectMapper;
-    private final FindInsurancePolicy findInsurancePolicy;
-    private final HistoryEntryGateway historyEntryGateway;
-
-    public ProcessEventImp(
-            ObjectMapper objectMapper,
-            FindInsurancePolicy findInsurancePolicy,
-            HistoryEntryGateway historyEntryGateway
-    ) {
-        this.objectMapper = objectMapper;
-        this.findInsurancePolicy = findInsurancePolicy;
-        this.historyEntryGateway = historyEntryGateway;
-    }
+public record ProcessEventImp(ObjectMapper objectMapper, FindInsurancePolicy findInsurancePolicy,
+                              HistoryEntryGateway historyEntryGateway) implements EventProcessor {
     public void processEvent(String eventJson) {
         try {
-        InsurancePolicyEvent event = objectMapper.readValue(eventJson, InsurancePolicyEvent.class);
-        InsurancePolicy insurancePolicy = findInsurancePolicy.find(event.policyId());
-        HistoryEntry historyEntry = new HistoryEntry(LocalDateTime.parse(event.timestamp()), event.status());
-        historyEntryGateway.create(historyEntry, insurancePolicy);
+            InsurancePolicyEvent event = objectMapper.readValue(eventJson, InsurancePolicyEvent.class);
+            InsurancePolicy insurancePolicy = findInsurancePolicy.find(event.policyId());
+            if (insurancePolicy == null) {
+                throw new IllegalArgumentException("Insurance policy not found for ID: " + event.policyId());
+            }
+            HistoryEntry historyEntry = new HistoryEntry(LocalDateTime.parse(event.timestamp()), event.status());
+            historyEntryGateway.create(historyEntry, insurancePolicy);
         } catch (Exception e) {
             System.out.println("Evento com erro: " + e.getMessage());
         }
