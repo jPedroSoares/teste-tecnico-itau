@@ -70,6 +70,12 @@ public class InsurancePolicyController {
     @PatchMapping("/{policyId}/cancel")
     ResponseEntity<InsurancePolicyResponse> cancel(@PathVariable UUID policyId) {
         InsurancePolicy canceledPolicy = cancelInsurancePolicy.cancelPolicy(policyId);
+        if (canceledPolicy == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Policy not found with id: " + policyId
+            );
+        }
         return ResponseEntity.ok(insurancePolicyDTOMapper.toReadResponse(canceledPolicy));
     }
 }

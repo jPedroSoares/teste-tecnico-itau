@@ -30,7 +30,7 @@ public class HealthCheckController {
     }
 
     @GetMapping("/health")
-    public ResponseEntity<Map<String, Object>> healthCheck() {
+    protected ResponseEntity<Map<String, Object>> healthCheck() {
         Map<String, Object> health = new HashMap<>();
 
         CompletableFuture<Boolean> dbFuture = CompletableFuture.supplyAsync(this::checkDatabaseHealth);

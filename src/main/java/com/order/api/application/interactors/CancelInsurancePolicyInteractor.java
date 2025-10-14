@@ -17,7 +17,7 @@ public record CancelInsurancePolicyInteractor (InsurancePolicyGateway insuranceP
     public InsurancePolicy cancelPolicy(UUID policyId) {
         InsurancePolicy insurancePolicy = insurancePolicyGateway.findById(policyId);
         if (insurancePolicy == null) {
-            throw new IllegalArgumentException("Insurance policy not found");
+            return null;
         }
         insurancePolicy.cancel();
         publishEvent(insurancePolicy);
