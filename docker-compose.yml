@@ -1,6 +1,22 @@
-version: '3.8'
+
+version: "3.8"
 
 services:
+  app:
+    build: .
+    container_name: insurance-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/orderdb
+      SPRING_DATASOURCE_USERNAME: test_user
+      SPRING_DATASOURCE_PASSWORD: test_pass
+    depends_on:
+      - db
+      - kafka
+      - mockserver-fraud-api
+    networks:
+      - spring-network
   db:
     image: postgres:latest
     container_name: postgres-db
@@ -32,38 +48,31 @@ services:
     ports:
       - "9092:9092"
     environment:
-      # KRaft mode configuration
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      
-      # Listeners configuration  
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_LISTENERS: PLAINTEXT://kafka:29092,CONTROLLER://kafka:9093,PLAINTEXT_HOST://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      
-      # Replication settings
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      
-      # Topic settings
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_NUM_PARTITIONS: 3
-      
-      # Storage
       KAFKA_LOG_DIRS: /var/lib/kafka/data
-      
-      # Cluster ID válido (formato UUID sem hífens, 22 caracteres base64)
       CLUSTER_ID: 4L6g3nShT-eMCtK--X86sw
     volumes:
       - kafka_data:/var/lib/kafka/data
     networks:
       - spring-network
     healthcheck:
-      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092"]
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-broker-api-versions --bootstrap-server localhost:9092",
+        ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -89,21 +98,21 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-    entrypoint: ['/bin/sh', '-c']
+    entrypoint: ["/bin/sh", "-c"]
     command: |
       "
       echo 'Waiting for Kafka to be fully ready...'
       sleep 10
-      
+
       echo 'Creating topics...'
-      
+
       kafka-topics --create --if-not-exists --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1 --topic payment-topic
       kafka-topics --create --if-not-exists --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1 --topic insurance-subscriptions-topic
       kafka-topics --create --if-not-exists --bootstrap-server kafka:29092 --partitions 3 --replication-factor 1 --topic orders-topic
-      
+
       echo 'Topics created successfully!'
       kafka-topics --list --bootstrap-server kafka:29092
-      
+
       echo 'Topic details:'
       kafka-topics --describe --bootstrap-server kafka:29092 --topic payment-topic
       kafka-topics --describe --bootstrap-server kafka:29092 --topic insurance-subscriptions-topic  
