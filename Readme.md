@@ -100,9 +100,11 @@ Essa separação garante testabilidade, extensibilidade e a troca de componentes
 
 Diagrama da Arquitetura do Microsserviço
 
-Diagrama de Sequência do Ciclo de Vida da Apólice
+<img width="50%" alt="Diagrama da Arquitetura do Microsserviço" src="./dev-env/assets/ecossistema.png" />
 
 Diagrama de Entidade-Relacionamento (ER)
+
+<img width="50%" alt="Diagrama de Entidade-Relacionamento (ER)" src="./dev-env/assets/der.png" />
 
 <h2 id="endpoints-da-api">📡 Endpoints da API</h2>
 Abaixo estão os principais endpoints expostos pela API REST:
