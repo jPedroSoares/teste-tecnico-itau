@@ -7,11 +7,10 @@ import com.order.api.domain.usecases.FindInsurancePolicy;
 import com.order.api.infrastructure.web.dto.CreateInsurancePolicyRequest;
 import com.order.api.infrastructure.web.dto.InsurancePolicyResponse;
 import com.order.api.infrastructure.web.mapper.InsurancePolicyDTOMapper;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,86 +36,41 @@ public class InsurancePolicyController {
     }
 
     @PostMapping
-    InsurancePolicyResponse create(@RequestBody CreateInsurancePolicyRequest request) {
+    ResponseEntity<InsurancePolicyResponse> create(@Valid @RequestBody CreateInsurancePolicyRequest request) {
         log.info("Creating insurance policy: customerId={}, category={}, insuredAmount={}",
                 request.customerId(), request.category(), request.insuredAmount());
-        try {
-            var insurancePolicy = insurancePolicyDTOMapper.toInsurancePolicy(request);
-            var createdInsurancePolicy = createInsurancePolicy.create(insurancePolicy);
-            log.info("Insurance policy created successfully: policyId={}, customerId={}, status={}",
-                    createdInsurancePolicy.getId(), createdInsurancePolicy.getCustomerId(),
-                    createdInsurancePolicy.getStatus().getStatusName());
-            return insurancePolicyDTOMapper.toResponse(createdInsurancePolicy);
-        } catch (Exception e) {
-            log.error("Failed to create insurance policy: customerId={}, error={}",
-                    request.customerId(), e.getMessage(), e);
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Failed to create insurance policy: " + e.getMessage()
-            );
-        }
+        
+        var insurancePolicy = insurancePolicyDTOMapper.toInsurancePolicy(request);
+        var createdInsurancePolicy = createInsurancePolicy.create(insurancePolicy);
+        
+        log.info("Insurance policy created successfully: policyId={}, customerId={}, status={}",
+                createdInsurancePolicy.getId(), createdInsurancePolicy.getCustomerId(),
+                createdInsurancePolicy.getStatus().getStatusName());
+
+        return ResponseEntity.ok(insurancePolicyDTOMapper.toResponse(createdInsurancePolicy));
     }
 
     @GetMapping("/policy/{policyId}")
-    InsurancePolicyResponse getByPolicyId(
-            @PathVariable UUID policyId) {
+    InsurancePolicyResponse getByPolicyId(@PathVariable UUID policyId) {
         log.debug("Fetching policy by ID: {}", policyId);
-        try {
-            InsurancePolicy response = findInsurancePolicy.find(policyId);
-            if (response == null) {
-                log.error("Policy not found with id: {}",
-                        policyId);
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Policy not found with id: " + policyId
-                );
-            }
-            return insurancePolicyDTOMapper.toResponse(response);
-        } catch (Exception e) {
-            log.error("Error fetching policy by ID: {}, error={}",
-                    policyId, e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        
+        InsurancePolicy response = findInsurancePolicy.find(policyId);
+        return insurancePolicyDTOMapper.toResponse(response);
     }
 
     @GetMapping("/customer/{customerId}")
-    List<InsurancePolicyResponse> getByCustomerId(
-            @PathVariable UUID customerId) {
+    List<InsurancePolicyResponse> getByCustomerId(@PathVariable UUID customerId) {
         log.debug("Fetching insurance policies by customerId: {}", customerId);
-        try {
-            List<InsurancePolicy> response = findInsurancePolicy.findByCustomerId(customerId);
-            if (response.isEmpty()) {
-                log.error("No policies found for CustomerId: {}", customerId);
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Policies not found for CustomerId: " + customerId
-                );
-            }
-            return insurancePolicyDTOMapper.toResponse(response);
-        } catch (Exception e) {
-            log.error("Error fetching policies by CustomerId: {}, error={}",
-                    customerId, e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        
+        List<InsurancePolicy> response = findInsurancePolicy.findByCustomerId(customerId);
+        return insurancePolicyDTOMapper.toResponse(response);
     }
 
     @PatchMapping("/{policyId}/cancel")
     ResponseEntity<InsurancePolicyResponse> cancel(@PathVariable UUID policyId) {
         log.info("Canceling insurance policy with id: {}", policyId);
-        try {
-            InsurancePolicy canceledPolicy = cancelInsurancePolicy.cancelPolicy(policyId);
-            if (canceledPolicy == null) {
-                log.error("Policy not found with id: {}", policyId);
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Policy not found with id: " + policyId
-                );
-            }
-            return ResponseEntity.ok(insurancePolicyDTOMapper.toReadResponse(canceledPolicy));
-        } catch (Exception e) {
-            log.error("Error canceling policy with id: {}, error={}",
-                    policyId, e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        
+        InsurancePolicy canceledPolicy = cancelInsurancePolicy.cancelPolicy(policyId);
+        return ResponseEntity.ok(insurancePolicyDTOMapper.toReadResponse(canceledPolicy));
     }
 }
