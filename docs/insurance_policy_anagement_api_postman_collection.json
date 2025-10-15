@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "b9a915a3-f734-4634-abee-dab61c65534a",
+		"name": "Insurance Policy Management API - João Soares",
+		"description": "API REST para gerenciamento do ciclo de vida de apólices de seguro, incluindo criação, validação, cancelamento e consulta de apólices. Suporta diferentes categorias de produtos, canais de venda e métodos de pagamento, com histórico completo de mudanças de status e integração com sistemas de validação antifraude.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48982029",
+		"_collection_link": "https://jpedrosoares-9323308.postman.co/workspace/Jo%C3%A3o-Pedro-Soares's-Workspace~fc884d05-f835-4662-8126-309cf1514d37/collection/48982029-b9a915a3-f734-4634-abee-dab61c65534a?action=share&source=collection_link&creator=48982029"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "HealthCheck",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint simples para verificação de disponibilidade da aplicação. Retorna \"OK\" quando o serviço está respondendo.\n\nUtilizado para verificações básicas de conectividade e disponibilidade do serviço.\n\nResposta esperada: Texto plano \"OK\" com status HTTP 200."
+		},
+		{
+			"name": "Insurance",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerId\": \"97cbd220-71a9-4c1f-a4c4-1e447b746d43\",\n    \"productId\": \"0407c0fd-2c56-4042-87d3-b5d8245eda3c\",\n    \"category\": \"LIFE\",\n    \"salesChannel\": \"MOBILE\",\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"totalMonthlyPremiumAmount\": 75.25,\n    \"insuredAmount\": 255000.50,\n    \"coverages\": {\n        \"Roubo\": 30000.25,\n        \"Perda Total\": 60000.25,\n        \"Colisão com Terceiros\": 5000.00\n    },\n    \"assistances\": [\n        \"Guincho até 250km\",\n        \"Troca de Óleo\",\n        \"Chaveiro 24h\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/insurance-policies",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"insurance-policies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By OrderId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/insurance-policies/policy/eead7d5b-e57e-43a9-995e-7124bc66aa7b",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"insurance-policies",
+								"policy",
+								"eead7d5b-e57e-43a9-995e-7124bc66aa7b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/insurance-policies/customer/97cbd220-71a9-4c1f-a4c4-1e447b746d43",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"insurance-policies",
+								"customer",
+								"97cbd220-71a9-4c1f-a4c4-1e447b746d43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/insurance-policies/eead7d5b-e57e-43a9-995e-7124bc66aa7b/cancel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"insurance-policies",
+								"eead7d5b-e57e-43a9-995e-7124bc66aa7b",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "API REST para gerenciamento completo de apólices de seguro com operações de criação, consulta e cancelamento.\n\nEndpoints disponíveis:\n\n- POST /api/insurance-policies - Criação de nova apólice\n    \n- GET /api/insurance-policies/policy/{policyId} - Consulta apólice por ID\n    \n- GET /api/insurance-policies/customer/{customerId} - Consulta apólices por cliente\n    \n- PATCH /api/insurance-policies/{policyId}/cancel - Cancelamento de apólice"
+		},
+		{
+			"name": "Anti Fraud",
+			"item": [
+				{
+					"name": "Check",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
