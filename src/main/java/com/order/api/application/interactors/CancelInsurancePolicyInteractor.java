@@ -6,6 +6,7 @@ import com.order.api.application.gateways.HistoryEntryGateway;
 import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.entity.InsurancePolicy;
+import com.order.api.domain.exceptions.PolicyNotFoundException;
 import com.order.api.domain.usecases.CancelInsurancePolicy;
 import com.order.api.domain.ports.EventPublisher;
 
@@ -17,7 +18,7 @@ public record CancelInsurancePolicyInteractor (InsurancePolicyGateway insuranceP
     public InsurancePolicy cancelPolicy(UUID policyId) {
         InsurancePolicy insurancePolicy = insurancePolicyGateway.findById(policyId);
         if (insurancePolicy == null) {
-            return null;
+            throw new PolicyNotFoundException(policyId);
         }
         insurancePolicy.cancel();
         publishEvent(insurancePolicy);

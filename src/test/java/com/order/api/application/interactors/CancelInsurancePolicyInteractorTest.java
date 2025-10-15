@@ -6,6 +6,8 @@ import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.domain.enums.*;
+import com.order.api.domain.exceptions.InvalidPolicyStateException;
+import com.order.api.domain.exceptions.PolicyNotFoundException;
 import com.order.api.domain.ports.EventPublisher;
 import com.order.api.domain.states.InsurancePolicyState;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,9 +121,10 @@ class CancelInsurancePolicyInteractorTest {
         UUID notFoundPolicyId = UUID.randomUUID();
         when(insurancePolicyGateway.findById(notFoundPolicyId)).thenReturn(null);
 
-        InsurancePolicy response = interactor.cancelPolicy(notFoundPolicyId);
-
-        assertNull(response);
+        PolicyNotFoundException exception = assertThrows(PolicyNotFoundException.class, () -> {
+            interactor.cancelPolicy(notFoundPolicyId);
+        });
+        assertEquals("Insurance policy not found with ID: " + notFoundPolicyId, exception.getMessage());
         verify(insurancePolicyGateway).findById(notFoundPolicyId);
         verifyNoInteractions(eventPublisher);
         verifyNoInteractions(historyEntryGateway);
