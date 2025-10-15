@@ -99,6 +99,8 @@ class InsurancePolicyInteractorTest {
                 Map.of("any_coverage", BigDecimal.valueOf(5000)),
                 List.of("any_assistance"),
                 BigDecimal.valueOf(50.0),
+                null,
+                null,
                 BigDecimal.valueOf(50000.0),
                 PaymentMethod.PIX,
                 SalesChannel.MOBILE
@@ -137,9 +139,9 @@ class InsurancePolicyInteractorTest {
 
         verify(mockCreatedPolicy).validate();
 
-        verify(eventPublisher, times(2)).publish(any(InsurancePolicyEvent.class));
+        verify(eventPublisher, times(3)).publish(any(InsurancePolicyEvent.class));
         
-        verify(historyEntryGateway, times(2)).create(any(HistoryEntry.class), eq(mockCreatedPolicy));
+        verify(historyEntryGateway, times(3)).create(any(HistoryEntry.class), eq(mockCreatedPolicy));
     }
 
     @Test
@@ -173,7 +175,7 @@ class InsurancePolicyInteractorTest {
         insurancePolicyInteractor.create(inputPolicy);
 
         ArgumentCaptor<InsurancePolicyEvent> eventCaptor = ArgumentCaptor.forClass(InsurancePolicyEvent.class);
-        verify(eventPublisher, times(2)).publish(eventCaptor.capture());
+        verify(eventPublisher, times(3)).publish(eventCaptor.capture());
 
         List<InsurancePolicyEvent> publishedEvents = eventCaptor.getAllValues();
         
@@ -249,10 +251,10 @@ class InsurancePolicyInteractorTest {
         insurancePolicyInteractor.create(inputPolicy);
 
         ArgumentCaptor<HistoryEntry> historyCaptor = ArgumentCaptor.forClass(HistoryEntry.class);
-        verify(historyEntryGateway, times(2)).create(historyCaptor.capture(), eq(mockCreatedPolicy));
+        verify(historyEntryGateway, times(3)).create(historyCaptor.capture(), eq(mockCreatedPolicy));
 
         List<HistoryEntry> createdHistories = historyCaptor.getAllValues();
-        assertEquals(2, createdHistories.size());
+        assertEquals(3, createdHistories.size());
 
         createdHistories.forEach(history -> {
             assertNotNull(history.timestamp());

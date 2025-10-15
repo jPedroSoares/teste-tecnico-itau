@@ -47,6 +47,8 @@ class ValidateInsurancePolicyImpTest {
                 Map.of("coverage1", BigDecimal.valueOf(1000)),
                 List.of("assistance1", "assistance2"),
                 BigDecimal.valueOf(100.0),
+                null,
+                null,
                 insuredAmount,
                 PaymentMethod.PIX,
                 SalesChannel.MOBILE

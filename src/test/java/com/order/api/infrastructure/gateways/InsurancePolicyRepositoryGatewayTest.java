@@ -44,6 +44,8 @@ class InsurancePolicyRepositoryGatewayTest {
                 Map.of("any_coverage", BigDecimal.valueOf(5000)),
                 List.of("any_assistance"),
                 BigDecimal.valueOf(50),
+                null,
+                null,
                 BigDecimal.valueOf(50000),
                 PaymentMethod.PIX,
                 SalesChannel.MOBILE

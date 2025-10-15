@@ -2,6 +2,7 @@ package com.order.api.main;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.api.application.gateways.HistoryEntryGateway;
+import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.application.interactors.ProcessEventImp;
 import com.order.api.domain.usecases.FindInsurancePolicy;
 import com.order.api.domain.usecases.EventProcessor;
@@ -31,6 +32,7 @@ public class KafkaConfig {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
     }
+
     @Bean
     KafkaProducer kafkaProducer(KafkaTemplate<String, Object> kafkaTemplate) {
         return new KafkaProducer(kafkaTemplate, "orders-topic");
@@ -52,9 +54,9 @@ public class KafkaConfig {
     }
 
     @Bean
-    public EventProcessor eventProcessor( FindInsurancePolicy findInsurancePolicy,
-                                          HistoryEntryGateway historyEntryGateway) {
+    public EventProcessor eventProcessor(FindInsurancePolicy findInsurancePolicy,
+                                         HistoryEntryGateway historyEntryGateway, InsurancePolicyGateway insurancePolicyGateway) {
         ObjectMapper objectMapper = new ObjectMapper();
-        return new ProcessEventImp(objectMapper, findInsurancePolicy, historyEntryGateway);
+        return new ProcessEventImp(objectMapper, findInsurancePolicy, historyEntryGateway, insurancePolicyGateway);
     }
 }

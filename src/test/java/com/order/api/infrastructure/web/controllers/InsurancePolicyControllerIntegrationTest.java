@@ -66,7 +66,7 @@ class InsurancePolicyControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerId").exists())
-                .andExpect(jsonPath("$.status").value("VALIDATED"));
+                .andExpect(jsonPath("$.status").value("PENDING"));
     }
 
     @Test

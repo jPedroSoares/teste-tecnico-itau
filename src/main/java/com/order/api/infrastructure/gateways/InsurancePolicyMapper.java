@@ -2,6 +2,8 @@ package com.order.api.infrastructure.gateways;
 
 import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.entity.InsurancePolicy;
+import com.order.api.domain.enums.InsurancePolicyStatus;
+import com.order.api.domain.states.*;
 import com.order.api.infrastructure.persistence.InsurancePolicyEntity;
 
 import java.util.List;
@@ -32,12 +34,15 @@ public record InsurancePolicyMapper(HistoryEntryMapper historyEntryMapper) {
                 insurancePolicyEntity.getCoverages(),
                 insurancePolicyEntity.getAssistances(),
                 insurancePolicyEntity.getTotalMonthlyPremiumAmount(),
+                insurancePolicyEntity.getFinishedAt(),
+                insurancePolicyEntity.getCreatedAt(),
                 insurancePolicyEntity.getInsuredAmount(),
                 insurancePolicyEntity.getPaymentMethod(),
                 insurancePolicyEntity.getSalesChannel()
         );
         List<HistoryEntry> historyEntryDomain = historyEntryMapper.toDomain(insurancePolicyEntity.getHistory());
         insurancePolicy.setHistory(historyEntryDomain);
+        insurancePolicy.setStatus(createStateFromStatus(insurancePolicyEntity.getStatus()));
         return insurancePolicy;
     }
 
@@ -47,5 +52,16 @@ public record InsurancePolicyMapper(HistoryEntryMapper historyEntryMapper) {
 
     public List<InsurancePolicy> toDomain(List<InsurancePolicyEntity> entities) {
         return entities.stream().map(this::toDomain).toList();
+    }
+
+    private InsurancePolicyState createStateFromStatus(InsurancePolicyStatus status) {
+        return switch (status) {
+            case RECEIVED -> new Received();
+            case VALIDATED -> new Validated();
+            case PENDING -> new Pending();
+            case REJECTED -> new Rejected();
+            case APPROVED -> new Approved();
+            case CANCELED -> new Canceled();
+        };
     }
 }

@@ -32,6 +32,8 @@ class RejectedTest {
                 Map.of("any_coverage", BigDecimal.valueOf(5000)),
                 List.of("any_assistance"),
                 BigDecimal.valueOf(200000),
+                null,
+                null,
                 BigDecimal.valueOf(1500),
                 PaymentMethod.PIX,
                 SalesChannel.MOBILE

@@ -185,6 +185,8 @@ class CancelInsurancePolicyInteractorTest {
                 Map.of("DEATH", new BigDecimal("100000")),
                 List.of("24h Medical Assistance"),
                 new BigDecimal("150.00"),
+                null,
+                null,
                 new BigDecimal("100000"),
                 PaymentMethod.CREDIT_CARD,
                 SalesChannel.WEB_SITE

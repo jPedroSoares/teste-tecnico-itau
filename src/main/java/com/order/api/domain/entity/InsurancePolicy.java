@@ -43,6 +43,8 @@ public class InsurancePolicy
             Map<String, BigDecimal> coverages,
             List<String> assistances,
             BigDecimal totalMonthlyPremiumAmount,
+            LocalDateTime finishedAt,
+            LocalDateTime createdAt,
             BigDecimal insuredAmount,
             PaymentMethod paymentMethod,
             SalesChannel salesChannel
@@ -58,7 +60,8 @@ public class InsurancePolicy
         this.paymentMethod = paymentMethod;
         this.salesChannel = salesChannel;
         this.status = new Received();
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = createdAt;
+        this.finishedAt = finishedAt;
         this.history = new ArrayList<>();
         this.addHistoryEntry(this.status);
     }
@@ -87,5 +90,9 @@ public class InsurancePolicy
 
     public void cancel() {
         this.status.cancel(this);
+    }
+
+    public void finish() {
+        this.finishedAt = LocalDateTime.now();
     }
 }

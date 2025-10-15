@@ -36,6 +36,8 @@ public class InsurancePolicyDTOMapper {
                 request.coverages(),
                 request.assistances(),
                 request.totalMonthlyPremiumAmount(),
+                null,
+                null,
                 request.insuredAmount(),
                 request.paymentMethod(),
                 request.salesChannel()

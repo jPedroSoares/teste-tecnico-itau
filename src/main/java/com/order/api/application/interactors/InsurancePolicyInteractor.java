@@ -38,6 +38,8 @@ public record InsurancePolicyInteractor(
             if (isValid) {
                 createdInsurancePolicy.validate();
                 publishEvent(createdInsurancePolicy, EventType.ORDER_VALIDATED);
+                createdInsurancePolicy.process();
+                publishEvent(createdInsurancePolicy, EventType.ORDER_PENDING);
                 log.info("Insurance policy validated for customer: {}", createdInsurancePolicy.getCustomerId());
             } else {
                 createdInsurancePolicy.reject();
@@ -66,5 +68,6 @@ public record InsurancePolicyInteractor(
         eventPublisher.publish(event);
         HistoryEntry historyEntry = new HistoryEntry(LocalDateTime.now(), insurancePolicy.getStatus().getStatusName());
         historyEntryGateway.create(historyEntry, insurancePolicy);
+        insurancePolicyGateway.updateStatus(insurancePolicy.getId(), insurancePolicy.getStatus().getStatusName());
     }
 }

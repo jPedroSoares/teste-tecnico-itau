@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.api.application.dto.InsurancePolicyEvent;
 import com.order.api.application.gateways.HistoryEntryGateway;
+import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.domain.entity.HistoryEntry;
 import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.domain.enums.EventType;
@@ -44,6 +45,9 @@ class ProcessEventImpTest {
     @Mock
     private HistoryEntryGateway historyEntryGateway;
 
+    @Mock
+    private InsurancePolicyGateway insurancePolicyGateway;
+
     private ProcessEventImp processEventImp;
     
     private String validEventJson;
@@ -53,7 +57,7 @@ class ProcessEventImpTest {
 
     @BeforeEach
     void setUp() {
-        processEventImp = new ProcessEventImp(objectMapper, findInsurancePolicy, historyEntryGateway);
+        processEventImp = new ProcessEventImp(objectMapper, findInsurancePolicy, historyEntryGateway, insurancePolicyGateway);
         
         validEventJson = createValidEventJson();
         mockEvent = createMockEvent();
@@ -81,6 +85,8 @@ class ProcessEventImpTest {
                 Map.of("coverage1", BigDecimal.valueOf(1000)),
                 List.of("assistance1"),
                 BigDecimal.valueOf(100.0),
+                null,
+                null,
                 BigDecimal.valueOf(50000.0),
                 PaymentMethod.PIX,
                 SalesChannel.MOBILE
