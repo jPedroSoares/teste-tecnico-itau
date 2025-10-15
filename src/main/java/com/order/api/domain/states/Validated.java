@@ -2,11 +2,12 @@ package com.order.api.domain.states;
 
 import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.domain.enums.InsurancePolicyStatus;
+import com.order.api.domain.exceptions.InvalidPolicyStateException;
 
 public class Validated implements InsurancePolicyState {
     @Override
     public void validate(InsurancePolicy policy) {
-        throw new IllegalStateException("Policy is already in VALIDATED state.");
+        throw new InvalidPolicyStateException("Policy is already in VALIDATED state.");
     }
 
     @Override
@@ -18,12 +19,12 @@ public class Validated implements InsurancePolicyState {
 
     @Override
     public void approve(InsurancePolicy policy) {
-        throw new IllegalStateException("Cannot approve a policy in VALIDATED state.");
+        throw new InvalidPolicyStateException("approve", getStatusName());
     }
 
     @Override
     public void reject(InsurancePolicy policy) {
-        throw new IllegalStateException("Cannot reject a policy in VALIDATED state.");
+        throw new InvalidPolicyStateException("reject", getStatusName());
     }
 
     @Override

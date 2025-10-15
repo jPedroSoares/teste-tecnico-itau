@@ -2,15 +2,16 @@ package com.order.api.domain.states;
 
 import com.order.api.domain.entity.InsurancePolicy;
 import com.order.api.domain.enums.InsurancePolicyStatus;
+import com.order.api.domain.exceptions.InvalidPolicyStateException;
 
 public class Pending implements InsurancePolicyState {
     @Override
     public void validate(InsurancePolicy policy) {
-        throw new IllegalStateException("Cannot validate a policy in PENDING state.");
+        throw new InvalidPolicyStateException("validate", getStatusName());
     }
 
     @Override
-    public void process(InsurancePolicy policy) {
+public void process(InsurancePolicy policy) {
         InsurancePolicyState newStatus = new Pending();
         policy.addHistoryEntry(newStatus);
     }
