@@ -2,6 +2,7 @@ package com.order.api.application.interactors;
 
 import com.order.api.application.gateways.InsurancePolicyGateway;
 import com.order.api.domain.entity.InsurancePolicy;
+import com.order.api.domain.exceptions.PolicyNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,10 +64,11 @@ class FindInsurancePolicyInteractorTest {
     void shouldReturnNullWhenPolicyNotFoundById() {
         UUID id = UUID.randomUUID();
         when(insurancePolicyGateway.findById(id)).thenReturn(null);
+        PolicyNotFoundException exception = assertThrows(PolicyNotFoundException.class, () -> {
+            interactor.find(id);
+        });
 
-        InsurancePolicy result = interactor.find(id);
-
-        assertNull(result);
+        assertEquals("Insurance policy not found with ID: " + id, exception.getMessage());
         verify(insurancePolicyGateway).findById(id);
     }
 
@@ -76,10 +78,11 @@ class FindInsurancePolicyInteractorTest {
         UUID customerId = UUID.randomUUID();
         List<InsurancePolicy> emptyList = List.of();
         when(insurancePolicyGateway.findByCustomerId(customerId)).thenReturn(emptyList);
+        PolicyNotFoundException exception = assertThrows(PolicyNotFoundException.class, () -> {
+            interactor.findByCustomerId(customerId);
+        });
 
-        List<InsurancePolicy> result = interactor.findByCustomerId(customerId);
-
-        assertTrue(result.isEmpty());
+        assertEquals("Insurance policy not found with customerId: " + customerId, exception.getMessage());
         verify(insurancePolicyGateway).findByCustomerId(customerId);
     }
 }
