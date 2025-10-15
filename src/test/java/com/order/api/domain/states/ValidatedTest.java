@@ -5,6 +5,7 @@ import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
+import com.order.api.domain.exceptions.InvalidPolicyStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class ValidatedTest {
     @Test
     @DisplayName("Should throw exception when validate is called on Validated state")
     void testValidateThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.validate();
         });
         assertEquals("Policy is already in VALIDATED state.", exception.getMessage());
@@ -58,7 +59,7 @@ class ValidatedTest {
     @Test
     @DisplayName("Should throw exception when approve is called on Validated state")
     void testApproveThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.approve();
         });
         assertEquals("Cannot approve a policy in VALIDATED state.", exception.getMessage());
@@ -67,7 +68,7 @@ class ValidatedTest {
     @Test
     @DisplayName("Should throw exception when reject is called on Validated state")
     void testRejectThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.reject();
         });
         assertEquals("Cannot reject a policy in VALIDATED state.", exception.getMessage());

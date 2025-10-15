@@ -5,6 +5,7 @@ import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
+import com.order.api.domain.exceptions.InvalidPolicyStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class PendingTest {
     @Test
     @DisplayName("Should throw exception when validate is called on Pending state")
     void testValidateThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.validate();
         });
         assertEquals("Cannot validate a policy in PENDING state.", exception.getMessage());

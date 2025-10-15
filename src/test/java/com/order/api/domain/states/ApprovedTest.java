@@ -5,6 +5,7 @@ import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
+import com.order.api.domain.exceptions.InvalidPolicyStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class ApprovedTest {
     @Test
     @DisplayName("Should throw exception when validate is called on Approved state")
     void testValidateThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.validate();
         });
         assertEquals("Cannot validate a policy in APPROVED state.", exception.getMessage());
@@ -57,7 +58,7 @@ class ApprovedTest {
     @Test
     @DisplayName("Should throw exception when approve is called on Approved state")
     void testApproveThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.approve();
         });
         assertEquals("Policy is already in APPROVED state.", exception.getMessage());
@@ -66,7 +67,7 @@ class ApprovedTest {
     @Test
     @DisplayName("Should throw exception when reject is called on Approved state")
     void testRejectThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.reject();
         });
         assertEquals("Cannot reject a policy in APPROVED state.", exception.getMessage());
@@ -75,7 +76,7 @@ class ApprovedTest {
     @Test
     @DisplayName("Should throw exception when cancel is called on Approved state")
     void testCancelThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.cancel();
         });
         assertEquals("Cannot cancel a policy in APPROVED state.", exception.getMessage());

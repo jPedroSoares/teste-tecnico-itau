@@ -5,6 +5,7 @@ import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
+import com.order.api.domain.exceptions.InvalidPolicyStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class ReceivedTest {
     @Test
     @DisplayName("Should throw exception when process is called on Received state")
     void testProcessThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.process();
         });
         assertEquals("Cannot process a policy in RECEIVED state.", exception.getMessage());
@@ -59,7 +60,7 @@ class ReceivedTest {
     @Test
     @DisplayName("Should throw exception when approve is called on Received state")
     void testApproveThrowsException() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        InvalidPolicyStateException exception = assertThrows(InvalidPolicyStateException.class, () -> {
             insurancePolicy.approve();
         });
         assertEquals("Cannot approve a policy in RECEIVED state.", exception.getMessage());
