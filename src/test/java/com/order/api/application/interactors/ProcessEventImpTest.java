@@ -11,6 +11,7 @@ import com.order.api.domain.enums.InsurancePolicyStatus;
 import com.order.api.domain.enums.PaymentMethod;
 import com.order.api.domain.enums.PolicyCategory;
 import com.order.api.domain.enums.SalesChannel;
+import com.order.api.domain.exceptions.PolicyNotFoundException;
 import com.order.api.domain.usecases.FindInsurancePolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +50,6 @@ class ProcessEventImpTest {
     private InsurancePolicyEvent mockEvent;
     private InsurancePolicy mockPolicy;
     private HistoryEntry mockHistoryEntry;
-    private PrintStream originalSystemOut;
 
     @BeforeEach
     void setUp() {
@@ -61,8 +59,6 @@ class ProcessEventImpTest {
         mockEvent = createMockEvent();
         mockPolicy = createMockInsurancePolicy();
         mockHistoryEntry = new HistoryEntry(LocalDateTime.now(), InsurancePolicyStatus.VALIDATED);
-        
-        originalSystemOut = System.out;
     }
 
     private InsurancePolicyEvent createMockEvent() {
@@ -104,19 +100,7 @@ class ProcessEventImpTest {
                 """;
     }
 
-    private ByteArrayOutputStream captureSystemOut() {
-        ByteArrayOutputStream outputCapture = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputCapture));
-        return outputCapture;
-    }
 
-    private void restoreSystemOut() {
-        System.setOut(originalSystemOut);
-    }
-
-    private String getSystemOutContent(ByteArrayOutputStream outputCapture) {
-        return outputCapture.toString();
-    }
 
     private void setupSuccessfulMocks(String eventJson, InsurancePolicyEvent event, InsurancePolicy policy, HistoryEntry historyEntry) throws Exception {
         when(objectMapper.readValue(eventJson, InsurancePolicyEvent.class)).thenReturn(event);
@@ -143,66 +127,63 @@ class ProcessEventImpTest {
     }
 
     @Test
-    @DisplayName("Should handle JSON parsing error gracefully")
-    void shouldHandleJsonParsingErrorGracefully() throws Exception {
+    @DisplayName("Should handle JSON parsing error and throw RuntimeException")
+    void shouldHandleJsonParsingErrorAndThrowRuntimeException() throws Exception {
         String invalidJson = "{ invalid json }";
         JsonProcessingException jsonException = new JsonProcessingException("Invalid JSON") {};
         
         when(objectMapper.readValue(invalidJson, InsurancePolicyEvent.class)).thenThrow(jsonException);
-        ByteArrayOutputStream outputCapture = captureSystemOut();
 
-        assertDoesNotThrow(() -> processEventImp.processEvent(invalidJson));
+        RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+            processEventImp.processEvent(invalidJson);
+        });
 
+        assertEquals("Error processing event: Invalid JSON", thrownException.getMessage());
+        assertEquals(jsonException, thrownException.getCause());
+        
         verify(objectMapper).readValue(invalidJson, InsurancePolicyEvent.class);
         verifyNoInteractions(findInsurancePolicy, historyEntryGateway);
-        
-        String output = getSystemOutContent(outputCapture);
-        assertTrue(output.contains("Evento com erro:"));
-        assertTrue(output.contains("Invalid JSON"));
-
-        restoreSystemOut();
     }
 
     @Test
-    @DisplayName("Should handle policy not found error gracefully")
-    void shouldHandlePolicyNotFoundErrorGracefully() throws Exception {
+    @DisplayName("Should handle policy not found and throw RuntimeException")
+    void shouldHandlePolicyNotFoundAndThrowRuntimeException() throws Exception {
+        PolicyNotFoundException policyNotFoundException = new PolicyNotFoundException(mockEvent.policyId());
 
         when(objectMapper.readValue(validEventJson, InsurancePolicyEvent.class)).thenReturn(mockEvent);
-        when(findInsurancePolicy.find(mockEvent.policyId())).thenReturn(null);
-        ByteArrayOutputStream outputCapture = captureSystemOut();
+        when(findInsurancePolicy.find(mockEvent.policyId())).thenThrow(policyNotFoundException);
 
-        assertDoesNotThrow(() -> processEventImp.processEvent(validEventJson));
+        RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+            processEventImp.processEvent(validEventJson);
+        });
 
+        assertTrue(thrownException.getMessage().startsWith("Error processing event:"));
+        assertEquals(policyNotFoundException, thrownException.getCause());
+        
         verify(objectMapper).readValue(validEventJson, InsurancePolicyEvent.class);
         verify(findInsurancePolicy).find(mockEvent.policyId());
         verifyNoInteractions(historyEntryGateway);
-        
-        String output = getSystemOutContent(outputCapture);
-        assertTrue(output.contains("Insurance policy not found for ID:"));
-        restoreSystemOut();
     }
 
     @Test
-    @DisplayName("Should handle history entry creation error gracefully")
-    void shouldHandleHistoryEntryCreationErrorGracefully() throws Exception {
+    @DisplayName("Should handle history entry creation error and throw RuntimeException")
+    void shouldHandleHistoryEntryCreationErrorAndThrowRuntimeException() throws Exception {
         RuntimeException historyCreationException = new RuntimeException("History creation failed");
 
         when(objectMapper.readValue(validEventJson, InsurancePolicyEvent.class)).thenReturn(mockEvent);
         when(findInsurancePolicy.find(mockEvent.policyId())).thenReturn(mockPolicy);
         when(historyEntryGateway.create(any(HistoryEntry.class), eq(mockPolicy))).thenThrow(historyCreationException);
-        ByteArrayOutputStream outputCapture = captureSystemOut();
 
-        assertDoesNotThrow(() -> processEventImp.processEvent(validEventJson));
+        RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+            processEventImp.processEvent(validEventJson);
+        });
+
+        assertEquals("Error processing event: History creation failed", thrownException.getMessage());
+        assertEquals(historyCreationException, thrownException.getCause());
 
         verify(objectMapper).readValue(validEventJson, InsurancePolicyEvent.class);
         verify(findInsurancePolicy).find(mockEvent.policyId());
         verify(historyEntryGateway).create(any(HistoryEntry.class), eq(mockPolicy));
-        
-        String output = getSystemOutContent(outputCapture);
-        assertTrue(output.contains("Evento com erro:"));
-        assertTrue(output.contains("History creation failed"));
-
-        restoreSystemOut();
     }
 
     @Test
@@ -217,5 +198,4 @@ class ProcessEventImpTest {
         inOrder.verify(findInsurancePolicy).find(mockEvent.policyId());
         inOrder.verify(historyEntryGateway).create(any(HistoryEntry.class), eq(mockPolicy));
     }
-
 }

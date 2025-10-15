@@ -85,7 +85,6 @@ Após tudo funcionar, o ambiente estará disponível:
 * **API do Microsserviço:** `http://localhost:8080`
 * **Servidor de Mocks:** - `http://localhost:1080`
 * **UI do Servidor de Mocks:** - `http://localhost:1080/mockserver/dashboard`
-* **Swagger:** - `http://localhost:8080/swagger-ui/index.html`
 * **UI do Broker:** - `http://localhost:8082`
 
 ## � Testando a Aplicação
@@ -232,6 +231,17 @@ Inicialmente pensei em usar um enum com switch/case, mas optei pelo State Patter
 
 Cada tipo de cliente (Regular, Alto Risco, etc.) tem regras diferentes de validação. O Strategy permite adicionar novos tipos sem mexer no código existente - princípio Open/Closed na prática.
 
+### Tratamento de Erros Robusto
+
+Implementei um sistema de exceções customizadas com `@ControllerAdvice` porque:
+
+* **Produção-ready:** APIs precisam de tratamento consistente de erros
+* **Códigos HTTP corretos:** 404 para not found, 409 para conflitos de estado, etc.
+* **Segurança:** Não vaza stack traces ou detalhes internos para clientes
+* **Debugging:** Logs estruturados internamente mantêm rastreabilidade
+
+Essa foi uma decisão consciente de priorizar robustez sobre conveniências como Swagger, que conflitava com o tratamento customizado.
+
 ### PostgreSQL + Docker
 
 Poderia ter usado H2 em memória, mas quis simular um ambiente mais realista. O Docker facilita a vida de quem for rodar o projeto - não precisa instalar nada na máquina.
@@ -316,7 +326,17 @@ Implementei alguns testes de integração, mas focaria mais em:
 
 **Trade-off consciente:** Priorizei qualidade dos unitários vs quantidade de integração, considerando tempo do desafio.
 
-## 🚀 Melhorias Futuras
+### Por que Removemos o Swagger?
+
+Como o tratamento robusto de erros é **crítico para produção** e o Swagger é apenas uma conveniência de desenvolvimento, optei por manter a qualidade da API em detrimento da documentação automática.
+
+**Alternativas:** A documentação completa está disponível via:
+
+* Collection do Postman (arquivo `docs/`)
+* Exemplos práticos neste README
+* Documentação detalhada nos arquivos `docs/api-examples.md` e `docs/anti-fraud-examples.md`
+
+## �🚀 Melhorias Futuras
 
 Algumas funcionalidades que implementaria nas próximas iterações:
 
