@@ -3,6 +3,7 @@ package com.order.api.infrastructure.gateways;
 import com.order.api.application.dto.PolicyValidationRequest;
 import com.order.api.application.dto.PolicyValidationResponse;
 import com.order.api.application.gateways.PolicyValidationGateway;
+import com.order.api.domain.exceptions.ExternalServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClient;
 
@@ -26,7 +27,7 @@ public class PolicyValidationGatewayImpl implements PolicyValidationGateway {
         } catch (Exception e) {
             log.error("Anti-fraud API call failed: policyId={}, customerId={}, error={}",
                     policyValidationRequest.orderId(), policyValidationRequest.customerId(), e.getMessage(), e);
-            throw new RuntimeException("Failed to validate policy", e);
+            throw new ExternalServiceException("Anti-fraud API", "Failed to validate policy", e);
         }
     }
 }
