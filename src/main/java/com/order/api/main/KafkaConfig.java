@@ -7,6 +7,7 @@ import com.order.api.domain.usecases.FindInsurancePolicy;
 import com.order.api.domain.usecases.EventProcessor;
 import com.order.api.infrastructure.messaging.consumers.PaymentKafkaConsumer;
 import com.order.api.infrastructure.messaging.KafkaProducer;
+import com.order.api.infrastructure.messaging.consumers.SubscriptionKafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,8 +45,13 @@ public class KafkaConfig {
     }
 
     @Bean
-    public PaymentKafkaConsumer PaymentKafkaConsumer(EventProcessor eventProcessor) {
+    public PaymentKafkaConsumer paymentKafkaConsumer(EventProcessor eventProcessor) {
         return new PaymentKafkaConsumer(eventProcessor);
+    }
+
+    @Bean
+    public SubscriptionKafkaConsumer subscriptionKafkaConsumer(EventProcessor eventProcessor) {
+        return new SubscriptionKafkaConsumer(eventProcessor);
     }
 
     @Bean
