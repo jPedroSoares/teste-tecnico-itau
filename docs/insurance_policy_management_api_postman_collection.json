@@ -41,7 +41,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"customerId\": \"97cbd220-71a9-4c1f-a4c4-1e447b746d43\",\n    \"productId\": \"0407c0fd-2c56-4042-87d3-b5d8245eda3c\",\n    \"category\": \"LIFE\",\n    \"salesChannel\": \"MOBILE\",\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"totalMonthlyPremiumAmount\": 75.25,\n    \"insuredAmount\": 255000.50,\n    \"coverages\": {\n        \"Roubo\": 30000.25,\n        \"Perda Total\": 60000.25,\n        \"Colisão com Terceiros\": 5000.00\n    },\n    \"assistances\": [\n        \"Guincho até 250km\",\n        \"Troca de Óleo\",\n        \"Chaveiro 24h\"\n    ]\n}",
+							"raw": "{\n    \"customerId\": \"97cbd220-71a9-4c1f-a4c4-1e447b746d43\",\n    \"productId\": \"0407c0fd-2c56-4042-87d3-b5d8245eda3c\",\n    \"category\": \"BUSINESS\",\n    \"salesChannel\": \"MOBILE\",\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"totalMonthlyPremiumAmount\": 75.25,\n    \"insuredAmount\": 55000.00,\n    \"coverages\": {\n        \"Roubo\": 30000.25,\n        \"Perda Total\": 60000.25,\n        \"Colisão com Terceiros\": 5000.00\n    },\n    \"assistances\": [\n        \"Guincho até 250km\",\n        \"Troca de Óleo\",\n        \"Chaveiro 24h\"\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -67,7 +67,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/insurance-policies/policy/eead7d5b-e57e-43a9-995e-7124bc66aa7b",
+							"raw": "{{base_url}}/api/insurance-policies/policy/c94d313a-01c3-429e-b884-d30abfcd2ab6",
 							"host": [
 								"{{base_url}}"
 							],
@@ -75,7 +75,7 @@
 								"api",
 								"insurance-policies",
 								"policy",
-								"eead7d5b-e57e-43a9-995e-7124bc66aa7b"
+								"c94d313a-01c3-429e-b884-d30abfcd2ab6"
 							]
 						}
 					},
@@ -107,14 +107,14 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/insurance-policies/eead7d5b-e57e-43a9-995e-7124bc66aa7b/cancel",
+							"raw": "{{base_url}}/api/insurance-policies/4dca7ec0-c0b5-4e2a-a236-d4bf8a5816c7/cancel",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"insurance-policies",
-								"eead7d5b-e57e-43a9-995e-7124bc66aa7b",
+								"4dca7ec0-c0b5-4e2a-a236-d4bf8a5816c7",
 								"cancel"
 							]
 						}
@@ -130,8 +130,26 @@
 				{
 					"name": "Check",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderId\": \"e053467f-bd48-4fd2-9481-75bd4e88ee40\",\n    \"customerId\": \"7c2a27ba-71ef-4dd8-a3cf-5e094316ffd8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{antifraud_url}}/check",
+							"host": [
+								"{{antifraud_url}}"
+							],
+							"path": [
+								"check"
+							]
+						}
 					},
 					"response": []
 				},

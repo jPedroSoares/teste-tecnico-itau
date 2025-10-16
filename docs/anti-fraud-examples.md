@@ -44,40 +44,6 @@ O sistema mapeia a `classification` para tipos de cliente:
 | `PREFERENTIAL` | Cliente Preferencial |
 | `NO_INFO` | Cliente Sem Informação |
 
-## Regras de Validação por Tipo de Cliente
-
-### 🟢 Cliente Regular
-
-**Limites para aprovação automática:**
-
-- **Seguro Vida/Residencial:** até R$ 500.000,00
-- **Seguro Auto:** até R$ 350.000,00  
-- **Outros seguros:** até R$ 255.000,00
-
-### 🔴 Cliente Alto Risco
-
-**Limites para aprovação automática:**
-
-- **Seguro Auto:** até R$ 250.000,00
-- **Seguro Residencial:** até R$ 150.000,00
-- **Outros seguros:** até R$ 125.000,00
-
-### 🟡 Cliente Preferencial
-
-**Limites para aprovação automática:**
-
-- **Seguro Vida:** até R$ 800.000,00
-- **Seguro Auto/Residencial:** até R$ 450.000,00
-- **Outros seguros:** até R$ 375.000,00
-
-### ⚪ Cliente Sem Informação
-
-**Limites para aprovação automática:**
-
-- **Seguro Vida/Residencial:** até R$ 200.000,00
-- **Seguro Auto:** até R$ 75.000,00
-- **Outros seguros:** até R$ 55.000,00
-
 ## Notas Importantes
 
-1. **Mock Atual:** A API de fraudes sempre retorna `HIGH_RISK`. Para testar outros cenários, seria necessário modificar o mock ou implementar lógica condicional.
+1. **Mock Atual:** A API de fraudes sempre retorna `HIGH_RISK`. Para testar outros cenários, é necessário modificar o mock em `./mock-fraud-api/mockserver.json` e reiniciar o servidor com os comandos `docker-compose down -v` e `docker-compose up -d --build`.

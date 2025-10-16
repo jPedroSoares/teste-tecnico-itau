@@ -8,10 +8,6 @@
 [![MAVEN](https://img.shields.io/badge/Maven-3.9.5-orange)](https://maven.apache.org/download.cgi)
 [![Docker](https://img.shields.io/badge/Docker-24.0^-blue)](https://docs.docker.com/desktop/setup/install/windows-install)
 
-<h3 align="center">
-	🚧  Projeto em construção...  🚧
-</h3>
-
 ## 📜 Tabela de Conteúdos
 
 * [Funcionalidades Principais](#funcionalidades-principais)
@@ -87,41 +83,48 @@ Após tudo funcionar, o ambiente estará disponível:
 * **UI do Servidor de Mocks:** - `http://localhost:1080/mockserver/dashboard`
 * **UI do Broker:** - `http://localhost:8082`
 
-## � Testando a Aplicação
+<h2 id="testando-a-aplicacao"> Testando a Aplicação </h2>
 
-### Fluxo completo de teste
 
-#### 1. Criar uma nova apólice
+### 1. Criar uma nova apólice
 
 ```bash
 curl -X POST http://localhost:8080/api/insurance-policies \
   -H "Content-Type: application/json" \
   -d '{
-    "customerId": "123e4567-e89b-12d3-a456-426614174000",
-    "productId": "456e7890-e89b-12d3-a456-426614174111",
-    "category": "VIDA",
-    "salesChannel": "ONLINE",
-    "paymentMethod": "PIX",
-    "totalMonthlyPremiumAmount": 89.90,
-    "insuredAmount": 150000.00,
+    "customerId": "66041e44-1795-46c0-9c97-eb61af711023",
+    "productId": "0407c0fd-2c56-4042-87d3-b5d8245eda3c",
+    "category": "AUTO",
+    "salesChannel": "MOBILE",
+    "paymentMethod": "CREDIT_CARD",
+    "totalMonthlyPremiumAmount": 75.25,
+    "insuredAmount": 12000.00,
     "coverages": {
-      "MORTE_NATURAL": 150000.00,
-      "INVALIDEZ_PERMANENTE": 75000.00
+        "Roubo": 30000.25,
+        "Perda Total": 60000.25,
+        "Colisão com Terceiros": 5000.00
     },
-    "assistances": ["FUNERAL", "CESTA_BASICA"]
-  }'
+    "assistances": [
+        "Guincho até 250km",
+        "Troca de Óleo",
+        "Chaveiro 24h"
+    ]
+}'
 ```
 
-**Resposta esperada:** A apólice será criada com status `RECEIVED` e depois automaticamente mudará para `VALIDATED` após a consulta à API de fraudes.
+**Resposta esperada:** A apólice será criada com status `RECEIVED`, mudará para `VALIDATED` após a consulta à API de fraudes e depois para `PENDING` até ser aprovada ou rejeitada.
 
-#### 2. Para aprovar ou rejeitar a apólice
+### 2. Para aprovar ou rejeitar a apólice
 
-O sistema aguarda um evento no tópico `payment-topic` do Kafka. Você pode simular isso de duas formas:
+O sistema aguarda um evento nos tópicos `payment-topic` e `insurance-subscriptions-topic` do Kafka. Você pode simular isso usando UI do Kafka:
 
-**Opção A - Usando Kafka CLI:**
+1. Acesse `http://localhost:8082`
+2. Vá em "Topics" → "payment-topic" | "insurance-subscriptions-topic"
+3. Clique em "Produce Message"
+4. Cole um dos JSONs abaixo e clique em "Produce Message"
+
 ```bash
 # Aprovar a apólice
-docker exec -it kafka kafka-console-producer --topic payment-topic --bootstrap-server localhost:9092
 # Cole este JSON (substitua os IDs pelos reais):
 {
   "eventId": "293e805b-1a96-4170-95ae-94b6e1161346",
@@ -143,71 +146,42 @@ docker exec -it kafka kafka-console-producer --topic payment-topic --bootstrap-s
 }
 ```
 
-**Opção B - Usando UI do Kafka (mais fácil):**
-1. Acesse `http://localhost:8082`
-2. Vá em "Topics" → "payment-topic"
-3. Clique em "Produce Message"
-4. Cole um dos JSONs acima
-
-#### 3. Verificar o resultado
+### 3. Verificar o resultado
 
 ```bash
-# Consultar a apólice para ver o novo status
-curl http://localhost:8080/api/insurance-policies/{id}
+curl http://localhost:8080/api/insurance-policies/policy/{id}
 ```
 
 O status deve estar `APPROVED` ou `REJECTED` conforme o evento enviado.
 
-### Teste rápido (só criação)
-
-Se quiser apenas testar a criação sem o fluxo completo:
+### 4. Listar apólices por cliente
 
 ```bash
-# Criar apólice
-curl -X POST http://localhost:8080/api/insurance-policies \
-  -H "Content-Type: application/json" \
-  -d '{
-    "customerId": "123e4567-e89b-12d3-a456-426614174000",
-    "productId": "456e7890-e89b-12d3-a456-426614174111",
-    "category": "VIDA",
-    "salesChannel": "ONLINE",
-    "paymentMethod": "PIX",
-    "totalMonthlyPremiumAmount": 89.90,
-    "insuredAmount": 150000.00,
-    "coverages": {
-      "MORTE_NATURAL": 150000.00
-    },
-    "assistances": ["FUNERAL"]
-  }'
+curl http://localhost:8080/api/insurance-policies/customer/{customerId}
+```
 
-# Consultar a apólice criada
-curl http://localhost:8080/api/insurance-policies/{id}
+### 5. Cancelar uma apólice
 
-# Cancelar se necessário (só funciona se não estiver aprovada)
+```bash
 curl -X PATCH http://localhost:8080/api/insurance-policies/{id}/cancel
 ```
 
-### Usando Swagger ou Postman
+### Usando Postman
 
-* **Swagger:** `http://localhost:8080/swagger-ui/index.html` - interface gráfica para testar a API
-* **Collection do Postman:** Importe o arquivo `docs/insurance_policy_anagement_api_postman_collection.json` no seu Postman
+* **Collection do Postman:** Importe o arquivo `docs/insurance_policy_management_api_postman_collection.json` no seu Postman
 
 ### Documentação Adicional
 
-Para exemplos mais detalhados e cenários específicos, consulte:
+Para exemplos mais detalhados e cenários específicos:
 
 * **[Exemplos de Payloads](docs/api-examples.md)** - Payloads prontos para diferentes tipos de seguro
 * **[Exemplos Anti-Fraud](docs/anti-fraud-examples.md)** - Regras de validação e cenários de teste baseados na classificação de risco
 
-## �🤔 Decisões e Arquitetura da Solução
+<h2 id="decisoes-e-arquitetura-da-solucao">🤔 Decisões e Arquitetura da Solução</h2>
 
 ### Por que Kafka ao invés de RabbitMQ?
 
-Escolhi Kafka principalmente por três razões: 
-
-1. **Experiência prévia** - já havia trabalhado com ele antes e sabia que conseguiria implementar rapidamente
-2. **Volume e performance** - para um sistema de apólices que pode ter muito volume, o Kafka aguenta melhor a pancada com sua arquitetura de partições  
-3. **Retentativas nativas** - a documentação mencionava a necessidade de retentativas, e o Kafka tem isso nativamente com configuração simples
+Escolhi Kafka principalmente por experiência prévia, facilidade de uso com Spring Boot e configuração simples via Docker Compose. Além disso acredito que Kafka é mais adequado para cenários de alta escala e necessidade de armazenamento dos eventos, para retentativas em caso de falhas, o que se alinha bem com o desafio.
 
 ### Clean Architecture
 
@@ -217,34 +191,21 @@ Era um dos pré-requisitos do desafio e eu já tinha experiência com ela, entã
 * **Flexibilidade:** Posso trocar banco ou broker sem afetar as regras de negócio  
 * **Organização:** Separação clara entre Domain, Application e Infrastructure
 
-Considerei usar Arquitetura Hexagonal também, mas Clean se ajustou melhor ao que estava sendo avaliado.
-
 ### State Pattern para o ciclo de vida
 
-Inicialmente pensei em usar um enum com switch/case, mas optei pelo State Pattern porque:
+Optei pelo State Pattern porque:
 
 * Cada estado tem suas próprias regras de transição
 * É mais fácil adicionar novos estados no futuro
-* Evita aqueles switches gigantes que são um pesadelo para manter
+* Evita switches complexos e melhora a legibilidade
 
 ### Strategy Pattern para tipos de cliente
 
-Cada tipo de cliente (Regular, Alto Risco, etc.) tem regras diferentes de validação. O Strategy permite adicionar novos tipos sem mexer no código existente - princípio Open/Closed na prática.
+Cada tipo de cliente (Regular, Alto Risco, etc.) tem regras diferentes de validação. O Strategy permite adicionar novos tipos sem mexer no código existente - aplicando o princípio Open/Closed.
 
-### Tratamento de Erros Robusto
+### Remoção do Swagger
 
-Implementei um sistema de exceções customizadas com `@ControllerAdvice` porque:
-
-* **Produção-ready:** APIs precisam de tratamento consistente de erros
-* **Códigos HTTP corretos:** 404 para not found, 409 para conflitos de estado, etc.
-* **Segurança:** Não vaza stack traces ou detalhes internos para clientes
-* **Debugging:** Logs estruturados internamente mantêm rastreabilidade
-
-Essa foi uma decisão consciente de priorizar robustez sobre conveniências como Swagger, que conflitava com o tratamento customizado.
-
-### PostgreSQL + Docker
-
-Poderia ter usado H2 em memória, mas quis simular um ambiente mais realista. O Docker facilita a vida de quem for rodar o projeto - não precisa instalar nada na máquina.
+Implementei o Swagger inicialmente, mas removi depois porque o tratamento de erros customizado acabou conflitando com ele. Por considerar o tratamento robusto de erros mais importante, optei por removê-lo, priorizando qualidade ao invés de conveniências. Como alternativa mantive exemplos práticos neste README e documentação detalhada nos arquivos `docs/api-examples.md` e `docs/anti-fraud-examples.md`. Além da collection do Postman já citada anteriormentet.
 
 <h2 id="diagramas-e-arquitetura-visual">🎨 Diagramas e Arquitetura Visual</h2>
 
@@ -262,47 +223,26 @@ Abaixo estão os principais endpoints expostos pela API REST:
 | Verbo | Rota | Descrição |
 | :--- | :--- | :--- |
 | **POST** | /api/insurance-policies | Cria uma nova solicitação de apólice. |
-| **GET** | /api/insurance-policies/{id} | Consulta uma solicitação por ID da apólice. |
+| **GET** | /api/insurance-policies/policy/{id} | Consulta uma solicitação por ID da apólice. |
 | **GET** | /api/insurance-policies/customer/{customerId} | Consulta solicitações por ID do cliente. |
 | **PATCH** | /api/insurance-policies/{id}/cancel | Cancela uma solicitação de apólice, se aplicável. |
 | **GET** | /health | Verifica o status de saúde da aplicação. |
 
-## 💭 Premissas e Decisões de Design
-
-Durante o desenvolvimento, precisei fazer algumas suposições onde o enunciado não era 100% claro:
-
-### Volume de transações
-Assumi um volume médio de transações (centenas por minuto, não milhares por segundo). Por isso escolhi PostgreSQL ao invés de uma solução NoSQL mais complexa.
-
-### API de Fraude
-Como era uma API mockada, assumi que ela sempre responde em até 2 segundos. Na vida real, implementaria timeout e retry com backoff exponencial.
-
-### Consistência de dados
-Optei por consistência eventual - quando publico um evento no Kafka, pode haver um pequeno delay até outros sistemas processarem. Para apólices de seguro, isso me pareceu aceitável.
+## 💭 Premissas
 
 ### Estados da apólice
 
-Interpretei que uma apólice aprovada não pode mais ser cancelada (seria estranho cancelar algo já aprovado). Se estiver errado, é só ajustar no código.
+Segundo a descrição do desafio, o status "Received" (Recebido) só pode transitar para "Validated" (Validado) ou "Cancelled" (Cancelado). Porém, tomei a liberdade de permitir transição direta de "Recebido" para "Rejeitado" também se a validação inicial falhar.
 
-Também resolvi um conflito na documentação: estava descrito que só poderia ir de "Recebido" para "Validado", mas depois dizia que em "Validado" poderia ir para "Rejeitado". Tomei a liberdade de permitir transição direta de "Recebido" para "Rejeitado" também - faz mais sentido para casos onde a validação falha logo de cara.
+Também assumi que alguns valores que estavam como `R$ 150.00,00` eram erros de digitação e deveriam ser `R$ 150.000,00`.
 
-### Segurança
-
-Não implementei autenticação/autorização por simplicidade, mas numa aplicação real seria obrigatório JWT + OAuth2.
-
-## 🧪 Estratégia de Testes
+<h2 id="estrategia-de-testes"> 🧪 Estratégia de Testes </h2>
 
 ### Comandos para Executar Testes
 
 ```bash
 # Todos os testes
 ./mvnw test
-
-# Só testes unitários (rápido)
-./mvnw test -Dtest="*Test"
-
-# Testes específicos
-./mvnw test -Dtest="InsurancePolicyInteractorTest"
 ```
 
 ### Decisões sobre Testes
@@ -315,7 +255,7 @@ Cobri todas as regras de negócio principais porque são o coração do sistema:
 * **Interactors:** Orquestração dos casos de uso
 * **Processamento de eventos:** Kafka consumer logic
 
-**Por que focei aqui?** As regras de negócio são complexas e críticas - um bug na validação pode aprovar/rejeitar incorretamente uma apólice.
+Foquei nesses testes por considerar as regras de negócio o ponto mais crítico - um bug na validação pode aprovar/rejeitar incorretamente uma apólice.
 
 #### Testes de Integração - Implementação Parcial
 Implementei alguns testes de integração, mas focaria mais em:
@@ -326,17 +266,7 @@ Implementei alguns testes de integração, mas focaria mais em:
 
 **Trade-off consciente:** Priorizei qualidade dos unitários vs quantidade de integração, considerando tempo do desafio.
 
-### Por que Removemos o Swagger?
-
-Como o tratamento robusto de erros é **crítico para produção** e o Swagger é apenas uma conveniência de desenvolvimento, optei por manter a qualidade da API em detrimento da documentação automática.
-
-**Alternativas:** A documentação completa está disponível via:
-
-* Collection do Postman (arquivo `docs/`)
-* Exemplos práticos neste README
-* Documentação detalhada nos arquivos `docs/api-examples.md` e `docs/anti-fraud-examples.md`
-
-## �🚀 Melhorias Futuras
+# 🚀 Melhorias Futuras
 
 Algumas funcionalidades que implementaria nas próximas iterações:
 
