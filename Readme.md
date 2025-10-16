@@ -85,6 +85,10 @@ Após tudo funcionar, o ambiente estará disponível:
 
 <h2 id="testando-a-aplicacao"> Testando a Aplicação </h2>
 
+### Usando Postman
+
+Os testes podem ser feitos via Postman. O arquivo `docs/insurance_policy_management_api_postman_collection.json` contém uma coleção de exemplos de requisições que podem ser importados diretamente no Postman. A coleção inclui exemplos para criar, consultar, listar e cancelar apólices.
+
 
 ### 1. Criar uma nova apólice
 
@@ -165,10 +169,6 @@ curl http://localhost:8080/api/insurance-policies/customer/{customerId}
 ```bash
 curl -X PATCH http://localhost:8080/api/insurance-policies/{id}/cancel
 ```
-
-### Usando Postman
-
-* **Collection do Postman:** Importe o arquivo `docs/insurance_policy_management_api_postman_collection.json` no seu Postman
 
 ### Documentação Adicional
 
